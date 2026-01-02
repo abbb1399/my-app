@@ -1,0 +1,27 @@
+"use client";
+
+import { getUser } from "@/features/users/actions";
+import { Loader2Icon } from "lucide-react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
+export function OnboardingClient({ userId }: { userId: string }) {
+  const router = useRouter();
+
+  // TODO: 없앨 수 있는지 체크
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      const user = getUser(userId);
+      if (user == null) return;
+
+      router.replace("/app");
+      clearInterval(intervalId);
+
+      return () => {
+        clearInterval(intervalId);
+      };
+    }, 250);
+  }, [userId, router]);
+
+  return <Loader2Icon className="size-10 animate-spin" />;
+}
