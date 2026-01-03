@@ -15,7 +15,7 @@ export const ExperienceLevelEnum = pgEnum(
 
 export const JobInfoTable = pgTable("job_info", {
   id,
-  title: varchar().notNull(),
+  title: varchar(),
   name: varchar().notNull(),
   experienceLevel: ExperienceLevelEnum().notNull(),
   description: varchar().notNull(),

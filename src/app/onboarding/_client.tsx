@@ -2,7 +2,7 @@
 
 import { getUser } from "@/features/users/actions";
 import { Loader2Icon } from "lucide-react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export function OnboardingClient({ userId }: { userId: string }) {
