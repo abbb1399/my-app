@@ -16,12 +16,12 @@ export function OnboardingClient({ userId }: { userId: string }) {
 
       router.replace("/app");
       clearInterval(intervalId);
-
-      return () => {
-        clearInterval(intervalId);
-      };
     }, 250);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [userId, router]);
 
-  return <Loader2Icon className="size-10 animate-spin" />;
+  return <Loader2Icon className="size-24 animate-spin" />;
 }

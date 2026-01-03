@@ -1,4 +1,4 @@
-import { deleteUser, upsertUser } from "../../../../features/users/db";
+import { deleteUser, upsertUser } from "@/features/users/db";
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import { NextRequest } from "next/server";
 
@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
 
         await upsertUser({
           id: clerkData.id,
-          name: `${clerkData.first_name} ${clerkData.last_name}`,
           email,
+          name: `${clerkData.first_name} ${clerkData.last_name}`,
           imageUrl: clerkData.image_url,
           createdAt: new Date(clerkData.created_at),
           updatedAt: new Date(clerkData.updated_at),
