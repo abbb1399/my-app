@@ -21,9 +21,7 @@ export default async function InterviewsPage({
     <div className="container py-4 space-y-4 h-screen-header flex flex-col gap-4 items-start">
       <JobInfoBackLink jobInfoId={jobInfoId} />
 
-      <Suspense
-        fallback={<Loader2 className="size-24 animate-spin mx-auto m-auto" />}
-      >
+      <Suspense fallback={<Loader2 className="size-24 animate-spin m-auto" />}>
         <SuspendedPage jobInfoId={jobInfoId} />
       </Suspense>
     </div>
@@ -38,7 +36,7 @@ async function SuspendedPage({ jobInfoId }: { jobInfoId: string }) {
   const interviews = await getInterviews(jobInfoId, userId);
 
   if (interviews.length === 0) {
-    return redirect(`/job-infos/${jobInfoId}/interviews/new`);
+    return redirect(`/app/job-infos/${jobInfoId}/interviews/new`);
   }
 
   return <div>Interviews for Job Info ID: {jobInfoId}</div>;

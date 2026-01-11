@@ -9,6 +9,8 @@ export const env = createEnv({
     DB_USER: z.string().min(1),
     DB_NAME: z.string().min(1),
     CLERK_SECRET_KEY: z.string().min(1),
+    HUME_API_KEY: z.string().min(1),
+    HUME_SECRET_KEY: z.string().min(1),
   },
   createFinalSchema: (env) => {
     return z.object(env).transform((val) => {
