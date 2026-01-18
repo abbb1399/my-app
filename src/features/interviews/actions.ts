@@ -8,7 +8,8 @@ import { getJobInfoIdTag } from "@/features/jobInfos/dbCache";
 import { and, eq } from "drizzle-orm";
 import { insertInterview, updateInterview as updateInterviewDb } from "./db";
 import { getInterviewIdTag } from "./dbCache";
-import { get } from "http";
+import { canCreateInterview } from "./permissions";
+import { PLAN_LIMIT_MESSAGE } from "@/lib/errorToast";
 
 export async function createInterview({
   jobInfoId,
@@ -21,6 +22,13 @@ export async function createInterview({
     return {
       error: true,
       message: "권한이 없습니다.",
+    };
+  }
+
+  if (!(await canCreateInterview())) {
+    return {
+      error: true,
+      message: PLAN_LIMIT_MESSAGE,
     };
   }
 
@@ -43,7 +51,7 @@ export async function createInterview({
 
 export async function updateInterview(
   id: string,
-  data: { humeChatId?: string; duration?: string }
+  data: { humeChatId?: string; duration?: string },
 ) {
   const { userId } = await getCurrentUser();
 
