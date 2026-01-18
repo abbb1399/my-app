@@ -23,6 +23,8 @@ import { Loader2 } from "lucide-react";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { ActionButton } from "@/components/ui/action-button";
+import { generateInterviewFeedback } from "@/features/interviews/actions";
 
 export default async function InterviewPage({
   params,
@@ -72,7 +74,13 @@ export default async function InterviewPage({
             item={interview}
             fallback={<SkeletonButton className="w-32" />}
             result={(i) =>
-              i.feedback == null ? null : (
+              i.feedback == null ? (
+                <ActionButton
+                  action={generateInterviewFeedback.bind(null, i.id)}
+                >
+                  피드백 생성하기
+                </ActionButton>
+              ) : (
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button>피드백 보기</Button>
