@@ -208,7 +208,7 @@ function Controls({
             variant="outline"
             size="sm"
           >
-            <LoadingSwap isLoading={isLoading}>건너띄기</LoadingSwap>
+            <LoadingSwap isLoading={isLoading}>건너뛰기</LoadingSwap>
           </Button>
           <Button
             onClick={generateFeedback}
