@@ -47,11 +47,11 @@ async function JobInfos() {
   return (
     <div className="container my-4">
       <div className="flex gap-2 justify-between mb-6">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl">나의 직무들</h1>
+        <h1 className="text-3xl md:text-4xl lg:text-5xl">나의 상담들</h1>
         <Button asChild>
-          <Link href="/app/job-infos/new">
+          <Link href="/app/sessions/new">
             <PlusIcon />
-            직무 생성하기
+            상담 생성하기
           </Link>
         </Button>
       </div>
@@ -60,7 +60,7 @@ async function JobInfos() {
         {jobInfos.map((jobInfo) => (
           <Link
             className="hover:scale-[1.02] transition-[transform_opacity]"
-            href={`/app/job-infos/${jobInfo.id}`}
+            href={`/app/sessions/${jobInfo.id}`}
             key={jobInfo.id}
           >
             <Card className="h-full">
@@ -89,11 +89,11 @@ async function JobInfos() {
           </Link>
         ))}
 
-        <Link className="transition-opacity" href="/app/job-infos/new">
+        <Link className="transition-opacity" href="/app/sessions/new">
           <Card className="h-full flex items-center justify-center border-dashed border-3 bg-transparent hover:border-primary/50 transition-colors shadow-none">
             <div className="text-lg flex items-center gap-2">
               <PlusIcon className="size-6" />
-              직무 생성하기
+              상담 생성하기
             </div>
           </Card>
         </Link>

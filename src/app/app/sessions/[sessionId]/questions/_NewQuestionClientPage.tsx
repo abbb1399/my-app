@@ -76,7 +76,7 @@ export function NewQuestionClientPage({
     <div className="flex flex-col items-center gap-4 w-full mx-w-[2000px] mx-auto grow h-screen-header">
       <div className="container flex gap-4 mt-4 items-center justify-between">
         <div className="grow basis-0">
-          <BackLink href={`/app/job-infos/${jobInfo.id}`}>
+          <BackLink href={`/app/sessions/${jobInfo.id}`}>
             {jobInfo.name}
           </BackLink>
         </div>

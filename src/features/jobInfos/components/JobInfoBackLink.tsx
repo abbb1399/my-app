@@ -16,7 +16,7 @@ export function JobInfoBackLink({
 }) {
   return (
     <BackLink
-      href={`/app/job-infos/${jobInfoId}`}
+      href={`/app/sessions/${jobInfoId}`}
       className={cn("mb-4", className)}
     >
       <Suspense fallback={"업무 설명"}>

@@ -31,12 +31,12 @@ export async function createJobInfo(unsafeData: z.infer<typeof jobInfoSchema>) {
 
   const jobInfo = await insertJobInfo({ ...data, userId });
 
-  redirect(`/app/job-infos/${jobInfo.id}`);
+  redirect(`/app/sessions/${jobInfo.id}`);
 }
 
 export async function updateJobInfo(
   id: string,
-  unsafeData: z.infer<typeof jobInfoSchema>
+  unsafeData: z.infer<typeof jobInfoSchema>,
 ) {
   const { userId } = await getCurrentUser();
 
@@ -66,7 +66,7 @@ export async function updateJobInfo(
 
   const jobInfo = await updateJobInfoDb(id, data);
 
-  redirect(`/app/job-infos/${jobInfo.id}`);
+  redirect(`/app/sessions/${jobInfo.id}`);
 }
 
 async function getJobInfo(id: string, userId: string) {

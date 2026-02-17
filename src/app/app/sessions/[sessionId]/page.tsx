@@ -46,25 +46,25 @@ const options = [
 export default async function JobInfoPage({
   params,
 }: {
-  params: Promise<{ jobInfoId: string }>;
+  params: Promise<{ sessionId: string }>;
 }) {
-  const { jobInfoId } = await params;
+  const { sessionId } = await params;
 
   const jobInfo = getCurrentUser().then(
     async ({ userId, redirectToSignIn }) => {
       if (userId == null) return redirectToSignIn();
 
-      const jobInfo = await getJobInfo(jobInfoId, userId);
+      const jobInfo = await getJobInfo(sessionId, userId);
 
       if (jobInfo == null) notFound();
 
       return jobInfo;
-    }
+    },
   );
 
   return (
     <div className="container my-4 space-y-4">
-      <BackLink href="/app">나의 직무들</BackLink>
+      <BackLink href="/app">나의 상담들</BackLink>
 
       <div className="space-y-6">
         <header className="space-y-4">
@@ -110,7 +110,7 @@ export default async function JobInfoPage({
           {options.map((option) => (
             <Link
               className="hover:scale-[1.02] transition-[transform_opacity]"
-              href={`/app/job-infos/${jobInfoId}/${option.href}`}
+              href={`/app/sessions/${sessionId}/${option.href}`}
               key={option.href}
             >
               <Card className="h-full flex items-start justify-between flex-row">
