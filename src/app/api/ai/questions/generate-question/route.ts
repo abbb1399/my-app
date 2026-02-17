@@ -4,17 +4,14 @@ import {
   questionDifficulties,
   QuestionTable,
 } from "@/drizzle/schema";
-import { getJobInfoIdTag } from "@/features/jobInfos/dbCache";
+import { getJobInfoIdTag } from "@/features/sessions/dbCache";
 import { insertQuestion } from "@/features/questions/db";
 import { getQuestionJobInfoTag } from "@/features/questions/dbCache";
 import { canCreateQuestion } from "@/features/questions/permissions";
 import { PLAN_LIMIT_MESSAGE } from "@/lib/errorToast";
 import { generateAiQuestion } from "@/services/ai/questions";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
-import {
-  createUIMessageStream,
-  createUIMessageStreamResponse,
-} from "ai";
+import { createUIMessageStream, createUIMessageStreamResponse } from "ai";
 import { and, asc, eq } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import z from "zod";

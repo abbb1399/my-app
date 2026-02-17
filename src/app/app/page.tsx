@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/card";
 import { db } from "@/drizzle/db";
 import { JobInfoTable } from "@/drizzle/schema";
-import { JobInfoForm } from "@/features/jobInfos/components/JobInfoForm";
-import { getJobInfoUserTag } from "@/features/jobInfos/dbCache";
-import { formatExperienceLevel } from "@/features/jobInfos/lib/formatters";
+import { SessionForm } from "@/features/sessions/components/SessionForm";
+import { getJobInfoUserTag } from "@/features/sessions/dbCache";
+import { formatExperienceLevel } from "@/features/sessions/lib/formatters";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { desc, eq } from "drizzle-orm";
 import { ArrowRightIcon, Loader2, PlusIcon } from "lucide-react";
@@ -28,12 +28,12 @@ export default function AppPage() {
         </div>
       }
     >
-      <JobInfos />
+      <SessionInfos />
     </Suspense>
   );
 }
 
-async function JobInfos() {
+async function SessionInfos() {
   const { userId, redirectToSignIn } = await getCurrentUser();
 
   if (userId == null) return redirectToSignIn();
@@ -41,7 +41,7 @@ async function JobInfos() {
   const jobInfos = await getJobInfos(userId);
 
   if (jobInfos.length === 0) {
-    return <NoJobInfos />;
+    return <NoSessionInfos />;
   }
 
   return (
@@ -102,7 +102,7 @@ async function JobInfos() {
   );
 }
 
-function NoJobInfos() {
+function NoSessionInfos() {
   return (
     <div className="container my-4 max-w-5xl">
       <h1 className="text-3xl md:text-4xl lg:text-5xl mb-4">환영합니다.</h1>
@@ -112,7 +112,7 @@ function NoJobInfos() {
       </p>
       <Card>
         <CardContent>
-          <JobInfoForm />
+          <SessionForm />
         </CardContent>
       </Card>
     </div>

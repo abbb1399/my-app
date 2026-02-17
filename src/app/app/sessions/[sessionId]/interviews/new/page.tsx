@@ -1,6 +1,6 @@
 import { db } from "@/drizzle/db";
 import { JobInfoTable } from "@/drizzle/schema";
-import { getJobInfoIdTag } from "@/features/jobInfos/dbCache";
+import { getJobInfoIdTag } from "@/features/sessions/dbCache";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { and, eq } from "drizzle-orm";
 import { Loader2 } from "lucide-react";

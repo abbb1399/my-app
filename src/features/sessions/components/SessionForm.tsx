@@ -23,15 +23,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { jobInfoSchema } from "../schemas";
+import { sessionSchema } from "../schemas";
 import { formatExperienceLevel } from "../lib/formatters";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { createJobInfo, updateJobInfo } from "../actions";
 import { toast } from "sonner";
 
-type JobInfoFormData = z.infer<typeof jobInfoSchema>;
+type SessionFormData = z.infer<typeof sessionSchema>;
 
-export function JobInfoForm({
+export function SessionForm({
   jobInfo,
 }: {
   jobInfo?: Pick<
@@ -39,8 +39,8 @@ export function JobInfoForm({
     "id" | "name" | "title" | "experienceLevel" | "description"
   >;
 }) {
-  const form = useForm<JobInfoFormData>({
-    resolver: zodResolver(jobInfoSchema),
+  const form = useForm<SessionFormData>({
+    resolver: zodResolver(sessionSchema),
     defaultValues: jobInfo ?? {
       name: "",
       title: null,
@@ -49,7 +49,7 @@ export function JobInfoForm({
     },
   });
 
-  async function onSubmit(values: JobInfoFormData) {
+  async function onSubmit(values: SessionFormData) {
     const action = jobInfo
       ? updateJobInfo.bind(null, jobInfo.id)
       : createJobInfo;

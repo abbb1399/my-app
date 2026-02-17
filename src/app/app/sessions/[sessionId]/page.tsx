@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/card";
 import { db } from "@/drizzle/db";
 import { JobInfoTable } from "@/drizzle/schema";
-import { getJobInfoIdTag } from "@/features/jobInfos/dbCache";
-import { formatExperienceLevel } from "@/features/jobInfos/lib/formatters";
+import { getJobInfoIdTag } from "@/features/sessions/dbCache";
+import { formatExperienceLevel } from "@/features/sessions/lib/formatters";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { and, eq } from "drizzle-orm";
 import { ArrowRightIcon } from "lucide-react";

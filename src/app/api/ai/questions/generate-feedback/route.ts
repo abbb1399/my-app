@@ -1,6 +1,6 @@
 import { db } from "@/drizzle/db";
 import { QuestionTable } from "@/drizzle/schema";
-import { getJobInfoIdTag } from "@/features/jobInfos/dbCache";
+import { getJobInfoIdTag } from "@/features/sessions/dbCache";
 import { getQuestionIdTag } from "@/features/questions/dbCache";
 import { generateAiQuestionFeedback } from "@/services/ai/questions";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";

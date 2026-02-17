@@ -7,7 +7,7 @@ import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { Suspense } from "react";
 import { getJobInfoIdTag } from "../dbCache";
 
-export function JobInfoBackLink({
+export function SessionBackLink({
   jobInfoId,
   className,
 }: {

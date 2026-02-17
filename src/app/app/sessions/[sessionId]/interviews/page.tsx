@@ -9,8 +9,8 @@ import {
 import { db } from "@/drizzle/db";
 import { InterviewTable } from "@/drizzle/schema";
 import { getInterviewJobInfoTag } from "@/features/interviews/dbCache";
-import { JobInfoBackLink } from "@/features/jobInfos/components/JobInfoBackLink";
-import { getJobInfoIdTag } from "@/features/jobInfos/dbCache";
+import { SessionBackLink } from "@/features/sessions/components/SessionBackLink";
+import { getJobInfoIdTag } from "@/features/sessions/dbCache";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { and, desc, eq, isNotNull } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
@@ -29,7 +29,7 @@ export default async function InterviewsPage({
 
   return (
     <div className="container py-4 gap-4 h-screen-header flex flex-col items-start">
-      <JobInfoBackLink jobInfoId={jobInfoId} />
+      <SessionBackLink jobInfoId={jobInfoId} />
 
       <Suspense
         fallback={<Loader2Icon className="size-24 animate-spin m-auto" />}

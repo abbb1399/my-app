@@ -3,7 +3,7 @@
 import { JobInfoTable } from "@/drizzle/schema";
 import { insertJobInfo, updateJobInfo as updateJobInfoDb } from "./db";
 import z from "zod";
-import { jobInfoSchema } from "./schemas";
+import { sessionSchema } from "./schemas";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { redirect } from "next/navigation";
 import { cacheTag } from "next/cache";
@@ -11,7 +11,7 @@ import { getJobInfoIdTag } from "./dbCache";
 import { db } from "@/drizzle/db";
 import { and, eq } from "drizzle-orm";
 
-export async function createJobInfo(unsafeData: z.infer<typeof jobInfoSchema>) {
+export async function createJobInfo(unsafeData: z.infer<typeof sessionSchema>) {
   const { userId } = await getCurrentUser();
 
   if (userId == null) {
@@ -21,7 +21,7 @@ export async function createJobInfo(unsafeData: z.infer<typeof jobInfoSchema>) {
     };
   }
 
-  const { success, data } = jobInfoSchema.safeParse(unsafeData);
+  const { success, data } = sessionSchema.safeParse(unsafeData);
   if (!success) {
     return {
       error: true,
@@ -36,7 +36,7 @@ export async function createJobInfo(unsafeData: z.infer<typeof jobInfoSchema>) {
 
 export async function updateJobInfo(
   id: string,
-  unsafeData: z.infer<typeof jobInfoSchema>,
+  unsafeData: z.infer<typeof sessionSchema>,
 ) {
   const { userId } = await getCurrentUser();
 
@@ -47,7 +47,7 @@ export async function updateJobInfo(
     };
   }
 
-  const { success, data } = jobInfoSchema.safeParse(unsafeData);
+  const { success, data } = sessionSchema.safeParse(unsafeData);
   if (!success) {
     return {
       error: true,

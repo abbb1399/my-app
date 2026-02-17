@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { db } from "@/drizzle/db";
 import { InterviewTable, JobInfoTable } from "@/drizzle/schema";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
-import { getJobInfoIdTag } from "@/features/jobInfos/dbCache";
+import { getJobInfoIdTag } from "@/features/sessions/dbCache";
 import { and, eq } from "drizzle-orm";
 import { insertInterview, updateInterview as updateInterviewDb } from "./db";
 import { getInterviewIdTag } from "./dbCache";

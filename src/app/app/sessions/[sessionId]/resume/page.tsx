@@ -1,4 +1,4 @@
-import { JobInfoBackLink } from "@/features/jobInfos/components/JobInfoBackLink";
+import { SessionBackLink } from "@/features/sessions/components/SessionBackLink";
 import { canRunResumeAnalysis } from "@/features/resumeAnalyses/permissions";
 import { Loader2Icon } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -14,7 +14,7 @@ export default async function ResumePage({
 
   return (
     <div className="container py-4 space-y-4 h-screen-header flex flex-col items-start">
-      <JobInfoBackLink jobInfoId={jobInfoId} />
+      <SessionBackLink jobInfoId={jobInfoId} />
       <Suspense
         fallback={<Loader2Icon className="animate-spin size-24 m-auto" />}
       >
