@@ -1,17 +1,17 @@
 "use server";
 
 import { JobInfoTable } from "@/drizzle/schema";
-import { insertJobInfo, updateJobInfo as updateJobInfoDb } from "./db";
+import { insertSession, updateSession as updateSessionDb } from "./db";
 import z from "zod";
 import { sessionSchema } from "./schemas";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { redirect } from "next/navigation";
 import { cacheTag } from "next/cache";
-import { getJobInfoIdTag } from "./dbCache";
+import { getSessionIdTag } from "./dbCache";
 import { db } from "@/drizzle/db";
 import { and, eq } from "drizzle-orm";
 
-export async function createJobInfo(unsafeData: z.infer<typeof sessionSchema>) {
+export async function createSession(unsafeData: z.infer<typeof sessionSchema>) {
   const { userId } = await getCurrentUser();
 
   if (userId == null) {
@@ -29,12 +29,12 @@ export async function createJobInfo(unsafeData: z.infer<typeof sessionSchema>) {
     };
   }
 
-  const jobInfo = await insertJobInfo({ ...data, userId });
+  const jobInfo = await insertSession({ ...data, userId });
 
   redirect(`/app/sessions/${jobInfo.id}`);
 }
 
-export async function updateJobInfo(
+export async function updateSession(
   id: string,
   unsafeData: z.infer<typeof sessionSchema>,
 ) {
@@ -55,7 +55,7 @@ export async function updateJobInfo(
     };
   }
 
-  const existingJobInfo = await getJobInfo(id, userId);
+  const existingJobInfo = await updateSessionInfo(id, userId);
 
   if (existingJobInfo == null) {
     return {
@@ -64,14 +64,14 @@ export async function updateJobInfo(
     };
   }
 
-  const jobInfo = await updateJobInfoDb(id, data);
+  const jobInfo = await updateSessionDb(id, data);
 
   redirect(`/app/sessions/${jobInfo.id}`);
 }
 
-async function getJobInfo(id: string, userId: string) {
+async function updateSessionInfo(id: string, userId: string) {
   "use cache";
-  cacheTag(getJobInfoIdTag(id));
+  cacheTag(getSessionIdTag(id));
 
   return db.query.JobInfoTable.findFirst({
     where: and(eq(JobInfoTable.id, id), eq(JobInfoTable.userId, userId)),

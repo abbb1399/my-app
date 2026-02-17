@@ -1,26 +1,26 @@
 import { getGlobalTag, getIdTag, getUserTag } from "@/lib/dataCache";
 import { revalidateTag } from "next/cache";
 
-export function getJobInfoGlobalTag() {
-  return getGlobalTag("jobInfos");
+export function getSessionGlobalTag() {
+  return getGlobalTag("sessions");
 }
 
-export function getJobInfoUserTag(userId: string) {
-  return getUserTag("jobInfos", userId);
+export function getSessionUserTag(userId: string) {
+  return getUserTag("sessions", userId);
 }
 
-export function getJobInfoIdTag(jobInfoId: string) {
-  return getIdTag("jobInfos", jobInfoId);
+export function getSessionIdTag(jobInfoId: string) {
+  return getIdTag("sessions", jobInfoId);
 }
 
-export function revalidateJobInfoCache({
+export function revalidateSessionCache({
   userId,
   id,
 }: {
   userId: string;
   id: string;
 }) {
-  revalidateTag(getJobInfoGlobalTag(), "max");
-  revalidateTag(getJobInfoUserTag(userId), "max");
-  revalidateTag(getJobInfoIdTag(id), "max");
+  revalidateTag(getSessionGlobalTag(), "max");
+  revalidateTag(getSessionUserTag(userId), "max");
+  revalidateTag(getSessionIdTag(id), "max");
 }

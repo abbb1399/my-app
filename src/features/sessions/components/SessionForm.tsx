@@ -26,7 +26,7 @@ import {
 import { sessionSchema } from "../schemas";
 import { formatExperienceLevel } from "../lib/formatters";
 import { LoadingSwap } from "@/components/ui/loading-swap";
-import { createJobInfo, updateJobInfo } from "../actions";
+import { createSession, updateSession } from "../actions";
 import { toast } from "sonner";
 
 type SessionFormData = z.infer<typeof sessionSchema>;
@@ -51,8 +51,8 @@ export function SessionForm({
 
   async function onSubmit(values: SessionFormData) {
     const action = jobInfo
-      ? updateJobInfo.bind(null, jobInfo.id)
-      : createJobInfo;
+      ? updateSession.bind(null, jobInfo.id)
+      : createSession;
 
     const res = await action(values);
 
