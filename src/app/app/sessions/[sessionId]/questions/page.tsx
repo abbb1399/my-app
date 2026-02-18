@@ -13,9 +13,9 @@ import { NewQuestionClientPage } from "./_NewQuestionClientPage";
 export default async function QuestionsPage({
   params,
 }: {
-  params: Promise<{ jobInfoId: string }>;
+  params: Promise<{ sessionId: string }>;
 }) {
-  const { jobInfoId } = await params;
+  const { sessionId } = await params;
 
   return (
     <Suspense
@@ -25,18 +25,18 @@ export default async function QuestionsPage({
         </div>
       }
     >
-      <SuspendedComponent jobInfoId={jobInfoId} />
+      <SuspendedComponent sessionId={sessionId} />
     </Suspense>
   );
 }
 
-async function SuspendedComponent({ jobInfoId }: { jobInfoId: string }) {
+async function SuspendedComponent({ sessionId }: { sessionId: string }) {
   const { userId, redirectToSignIn } = await getCurrentUser();
   if (userId == null) return redirectToSignIn();
 
   if (!(await canCreateQuestion())) return redirect("/app/upgrade");
 
-  const jobInfo = await getJobInfo(jobInfoId, userId);
+  const jobInfo = await getJobInfo(sessionId, userId);
   if (jobInfo == null) return notFound();
 
   return <NewQuestionClientPage jobInfo={jobInfo} />;

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { db } from "@/drizzle/db";
 import { InterviewTable } from "@/drizzle/schema";
-import { getInterviewJobInfoTag } from "@/features/chats/dbCache";
+import { getChatJobInfoTag } from "@/features/chats/dbCache";
 import { SessionBackLink } from "@/features/sessions/components/SessionBackLink";
 import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
@@ -104,7 +104,7 @@ async function SuspendedPage({ sessionId }: { sessionId: string }) {
 
 async function getChats(jobInfoId: string, userId: string) {
   "use cache";
-  cacheTag(getInterviewJobInfoTag(jobInfoId));
+  cacheTag(getChatJobInfoTag(jobInfoId));
   cacheTag(getSessionIdTag(jobInfoId));
 
   const data = await db.query.InterviewTable.findMany({
