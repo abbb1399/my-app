@@ -1,6 +1,6 @@
 import { db } from "@/drizzle/db";
 import {
-  JobInfoTable,
+  SessionTable,
   questionDifficulties,
   QuestionTable,
 } from "@/drizzle/schema";
@@ -90,7 +90,7 @@ async function getJobInfo(id: string, userId: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 
-  return db.query.JobInfoTable.findFirst({
-    where: and(eq(JobInfoTable.id, id), eq(JobInfoTable.userId, userId)),
+  return db.query.SessionTable.findFirst({
+    where: and(eq(SessionTable.id, id), eq(SessionTable.userId, userId)),
   });
 }

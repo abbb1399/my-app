@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { env } from "@/data/env/client";
-import { JobInfoTable } from "@/drizzle/schema";
+import { SessionTable } from "@/drizzle/schema";
 import { createChat, updateChat } from "@/features/chats/actions";
 import { errorToast } from "@/lib/errorToast";
 import { CondensedMessages } from "@/services/hume/components/CondensedMessages";
@@ -19,7 +19,7 @@ export function StartCall({
 }: {
   accessToken: string;
   jobInfo: Pick<
-    typeof JobInfoTable.$inferSelect,
+    typeof SessionTable.$inferSelect,
     "id" | "title" | "description" | "experienceLevel"
   >;
   user: {

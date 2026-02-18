@@ -1,6 +1,6 @@
 import { BackLink } from "@/components/BackLink";
 import { db } from "@/drizzle/db";
-import { JobInfoTable } from "@/drizzle/schema";
+import { SessionTable } from "@/drizzle/schema";
 import { cn } from "@/lib/utils";
 import { eq } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
@@ -35,7 +35,7 @@ async function getJobInfo(id: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 
-  return db.query.JobInfoTable.findFirst({
-    where: eq(JobInfoTable.id, id),
+  return db.query.SessionTable.findFirst({
+    where: eq(SessionTable.id, id),
   });
 }

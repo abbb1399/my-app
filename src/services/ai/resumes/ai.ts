@@ -1,4 +1,4 @@
-import { JobInfoTable } from "@/drizzle/schema";
+import { SessionTable } from "@/drizzle/schema";
 import { streamObject } from "ai";
 import { google } from "../models/google";
 import { aiAnalyzeSchema } from "./schemas";
@@ -9,7 +9,7 @@ export async function analyzeResumeForJob({
 }: {
   resumeFile: File;
   jobInfo: Pick<
-    typeof JobInfoTable.$inferSelect,
+    typeof SessionTable.$inferSelect,
     "title" | "experienceLevel" | "description"
   >;
 }) {

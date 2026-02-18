@@ -12,7 +12,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  JobInfoTable,
+  SessionTable,
   questionDifficulties,
   QuestionDifficulty,
 } from "@/drizzle/schema";
@@ -27,7 +27,7 @@ type Status = "awaiting-answer" | "awaiting-difficulty" | "init";
 export function NewQuestionClientPage({
   jobInfo,
 }: {
-  jobInfo: Pick<typeof JobInfoTable.$inferSelect, "id" | "name" | "title">;
+  jobInfo: Pick<typeof SessionTable.$inferSelect, "id" | "name" | "title">;
 }) {
   const [status, setStatus] = useState<Status>("init");
   const [answer, setAnswer] = useState<string | null>(null);

@@ -1,12 +1,12 @@
 import { db } from "@/drizzle/db";
-import { JobInfoTable } from "@/drizzle/schema";
+import { SessionTable } from "@/drizzle/schema";
 import { revalidateSessionCache } from "./dbCache";
 import { eq } from "drizzle-orm";
 
-export async function insertSession(jobInfo: typeof JobInfoTable.$inferInsert) {
-  const [newJobInfo] = await db.insert(JobInfoTable).values(jobInfo).returning({
-    id: JobInfoTable.id,
-    userId: JobInfoTable.userId,
+export async function insertSession(jobInfo: typeof SessionTable.$inferInsert) {
+  const [newJobInfo] = await db.insert(SessionTable).values(jobInfo).returning({
+    id: SessionTable.id,
+    userId: SessionTable.userId,
   });
 
   revalidateSessionCache(newJobInfo);
@@ -16,15 +16,15 @@ export async function insertSession(jobInfo: typeof JobInfoTable.$inferInsert) {
 
 export async function updateSession(
   id: string,
-  jobInfo: Partial<typeof JobInfoTable.$inferInsert>,
+  jobInfo: Partial<typeof SessionTable.$inferInsert>,
 ) {
   const [updatedJobInfo] = await db
-    .update(JobInfoTable)
+    .update(SessionTable)
     .set(jobInfo)
-    .where(eq(JobInfoTable.id, id))
+    .where(eq(SessionTable.id, id))
     .returning({
-      id: JobInfoTable.id,
-      userId: JobInfoTable.userId,
+      id: SessionTable.id,
+      userId: SessionTable.userId,
     });
 
   revalidateSessionCache(updatedJobInfo);

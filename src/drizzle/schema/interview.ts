@@ -1,12 +1,12 @@
 import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import { id, createdAt, updatedAt } from "@/drizzle/schemaHelpers";
-import { JobInfoTable } from "./jobInfo";
+import { SessionTable } from "./session";
 import { relations } from "drizzle-orm";
 
 export const InterviewTable = pgTable("interviews", {
   id,
   jobInfoId: uuid()
-    .references(() => JobInfoTable.id, { onDelete: "cascade" })
+    .references(() => SessionTable.id, { onDelete: "cascade" })
     .notNull(),
   duration: varchar().notNull(),
   humeChatId: varchar(),
@@ -16,8 +16,8 @@ export const InterviewTable = pgTable("interviews", {
 });
 
 export const interviewRelations = relations(InterviewTable, ({ one }) => ({
-  jobInfo: one(JobInfoTable, {
+  jobInfo: one(SessionTable, {
     fields: [InterviewTable.jobInfoId],
-    references: [JobInfoTable.id],
+    references: [SessionTable.id],
   }),
 }));

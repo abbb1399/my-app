@@ -9,11 +9,11 @@ export const experienceLevels = ["junior", "mid-level", "senior"] as const;
 export type ExperienceLevel = (typeof experienceLevels)[number];
 
 export const ExperienceLevelEnum = pgEnum(
-  "job_infos_experience_level",
-  experienceLevels
+  "session_experience_level",
+  experienceLevels,
 );
 
-export const JobInfoTable = pgTable("job_info", {
+export const SessionTable = pgTable("session", {
   id,
   title: varchar(),
   name: varchar().notNull(),
@@ -26,9 +26,9 @@ export const JobInfoTable = pgTable("job_info", {
   updatedAt,
 });
 
-export const jobInfoRelations = relations(JobInfoTable, ({ one, many }) => ({
+export const sessionRelations = relations(SessionTable, ({ one, many }) => ({
   user: one(UserTable, {
-    fields: [JobInfoTable.userId],
+    fields: [SessionTable.userId],
     references: [UserTable.id],
   }),
   questions: many(QuestionTable),

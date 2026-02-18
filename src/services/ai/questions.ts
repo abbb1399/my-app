@@ -1,5 +1,5 @@
 import {
-  JobInfoTable,
+  SessionTable,
   QuestionDifficulty,
   QuestionTable,
 } from "@/drizzle/schema";
@@ -13,7 +13,7 @@ export function generateAiQuestion({
   onFinish,
 }: {
   jobInfo: Pick<
-    typeof JobInfoTable.$inferInsert,
+    typeof SessionTable.$inferInsert,
     "title" | "description" | "experienceLevel"
   >;
   previousQuestions: Pick<

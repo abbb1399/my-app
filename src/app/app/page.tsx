@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { db } from "@/drizzle/db";
-import { JobInfoTable } from "@/drizzle/schema";
+import { SessionTable } from "@/drizzle/schema";
 import { SessionForm } from "@/features/sessions/components/SessionForm";
 import { getSessionUserTag } from "@/features/sessions/dbCache";
 import { formatExperienceLevel } from "@/features/sessions/lib/formatters";
@@ -123,8 +123,8 @@ async function getSessions(userId: string) {
   "use cache";
   cacheTag(getSessionUserTag(userId));
 
-  return db.query.JobInfoTable.findMany({
-    where: eq(JobInfoTable.userId, userId),
-    orderBy: desc(JobInfoTable.createdAt),
+  return db.query.SessionTable.findMany({
+    where: eq(SessionTable.userId, userId),
+    orderBy: desc(SessionTable.createdAt),
   });
 }

@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { db } from "@/drizzle/db";
-import { JobInfoTable } from "@/drizzle/schema";
+import { SessionTable } from "@/drizzle/schema";
 import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { formatExperienceLevel } from "@/features/sessions/lib/formatters";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
@@ -134,7 +134,7 @@ async function getJobInfo(id: string, userId: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 
-  return db.query.JobInfoTable.findFirst({
-    where: and(eq(JobInfoTable.id, id), eq(JobInfoTable.userId, userId)),
+  return db.query.SessionTable.findFirst({
+    where: and(eq(SessionTable.id, id), eq(SessionTable.userId, userId)),
   });
 }

@@ -2,7 +2,7 @@
 
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { db } from "@/drizzle/db";
-import { InterviewTable, JobInfoTable } from "@/drizzle/schema";
+import { InterviewTable, SessionTable } from "@/drizzle/schema";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { and, eq } from "drizzle-orm";
@@ -125,8 +125,8 @@ async function getJobInfo(id: string, userId: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 
-  return db.query.JobInfoTable.findFirst({
-    where: and(eq(JobInfoTable.id, id), eq(JobInfoTable.userId, userId)),
+  return db.query.SessionTable.findFirst({
+    where: and(eq(SessionTable.id, id), eq(SessionTable.userId, userId)),
   });
 }
 

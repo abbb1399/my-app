@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { experienceLevels, JobInfoTable } from "@/drizzle/schema/jobInfo";
+import { experienceLevels, SessionTable } from "@/drizzle/schema/session";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -35,7 +35,7 @@ export function SessionForm({
   jobInfo,
 }: {
   jobInfo?: Pick<
-    typeof JobInfoTable.$inferSelect,
+    typeof SessionTable.$inferSelect,
     "id" | "name" | "title" | "experienceLevel" | "description"
   >;
 }) {

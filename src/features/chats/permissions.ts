@@ -1,5 +1,5 @@
 import { db } from "@/drizzle/db";
-import { InterviewTable, JobInfoTable } from "@/drizzle/schema";
+import { InterviewTable, SessionTable } from "@/drizzle/schema";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { hasPermission } from "@/services/clerk/lib/hasPermission";
 import { and, count, eq, isNotNull } from "drizzle-orm";
@@ -30,10 +30,10 @@ async function getChatCount(userId: string) {
   const [{ count: c }] = await db
     .select({ count: count() })
     .from(InterviewTable)
-    .innerJoin(JobInfoTable, eq(InterviewTable.jobInfoId, JobInfoTable.id))
+    .innerJoin(SessionTable, eq(InterviewTable.jobInfoId, SessionTable.id))
     .where(
       and(
-        eq(JobInfoTable.userId, userId),
+        eq(SessionTable.userId, userId),
         isNotNull(InterviewTable.humeChatId),
       ),
     );
