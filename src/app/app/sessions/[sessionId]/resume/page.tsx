@@ -14,7 +14,7 @@ export default async function ResumePage({
 
   return (
     <div className="container py-4 space-y-4 h-screen-header flex flex-col items-start">
-      <SessionBackLink jobInfoId={jobInfoId} />
+      <SessionBackLink sessionId={jobInfoId} />
       <Suspense
         fallback={<Loader2Icon className="animate-spin size-24 m-auto" />}
       >

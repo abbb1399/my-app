@@ -4,15 +4,15 @@ import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { db } from "@/drizzle/db";
 import { InterviewTable, JobInfoTable } from "@/drizzle/schema";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
-import { getJobInfoIdTag } from "@/features/sessions/dbCache";
+import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { and, eq } from "drizzle-orm";
-import { insertInterview, updateInterview as updateInterviewDb } from "./db";
-import { getInterviewIdTag } from "./dbCache";
-import { canCreateInterview } from "./permissions";
+import { insertChat, updateChat as updateChatDb } from "./db";
+import { getChatIdTag } from "./dbCache";
+import { canCreateChat } from "./permissions";
 import { PLAN_LIMIT_MESSAGE } from "@/lib/errorToast";
 import { generateAiInterviewFeedback } from "@/services/ai/interviews";
 
-export async function createInterview({
+export async function createChat({
   jobInfoId,
 }: {
   jobInfoId: string;
@@ -26,7 +26,7 @@ export async function createInterview({
     };
   }
 
-  if (!(await canCreateInterview())) {
+  if (!(await canCreateChat())) {
     return {
       error: true,
       message: PLAN_LIMIT_MESSAGE,
@@ -42,7 +42,7 @@ export async function createInterview({
     };
   }
 
-  const interview = await insertInterview({
+  const interview = await insertChat({
     jobInfoId,
     duration: "00:00:00",
   });
@@ -50,7 +50,7 @@ export async function createInterview({
   return { error: false, id: interview.id };
 }
 
-export async function updateInterview(
+export async function updateChat(
   id: string,
   data: { humeChatId?: string; duration?: string },
 ) {
@@ -63,7 +63,7 @@ export async function updateInterview(
     };
   }
 
-  const interview = await getInterview(id, userId);
+  const interview = await getChat(id, userId);
 
   if (interview == null) {
     return {
@@ -72,12 +72,12 @@ export async function updateInterview(
     };
   }
 
-  await updateInterviewDb(id, data);
+  await updateChatDb(id, data);
 
   return { error: false };
 }
 
-export async function generateInterviewFeedback(interviewId: string) {
+export async function generateInterviewFeedback(chatId: string) {
   const { userId, user } = await getCurrentUser({ allData: true });
 
   if (userId == null || user == null) {
@@ -87,7 +87,7 @@ export async function generateInterviewFeedback(interviewId: string) {
     };
   }
 
-  const interview = await getInterview(interviewId, userId);
+  const interview = await getChat(chatId, userId);
 
   if (interview == null) {
     return {
@@ -99,7 +99,7 @@ export async function generateInterviewFeedback(interviewId: string) {
   if (interview.humeChatId == null) {
     return {
       error: true,
-      message: "인터뷰가 아직 완료되지 않았습니다.",
+      message: "대화가 아직 완료되지 않았습니다.",
     };
   }
 
@@ -116,23 +116,23 @@ export async function generateInterviewFeedback(interviewId: string) {
     };
   }
 
-  await updateInterviewDb(interviewId, { feedback });
+  await updateChatDb(chatId, { feedback });
 
   return { error: false };
 }
 
 async function getJobInfo(id: string, userId: string) {
   "use cache";
-  cacheTag(getJobInfoIdTag(id));
+  cacheTag(getSessionIdTag(id));
 
   return db.query.JobInfoTable.findFirst({
     where: and(eq(JobInfoTable.id, id), eq(JobInfoTable.userId, userId)),
   });
 }
 
-async function getInterview(id: string, userId: string) {
+async function getChat(id: string, userId: string) {
   "use cache";
-  cacheTag(getInterviewIdTag(id));
+  cacheTag(getChatIdTag(id));
 
   const interview = await db.query.InterviewTable.findFirst({
     where: eq(InterviewTable.id, id),
@@ -151,7 +151,7 @@ async function getInterview(id: string, userId: string) {
 
   if (interview == null) return null;
 
-  cacheTag(getJobInfoIdTag(interview.jobInfo.id));
+  cacheTag(getSessionIdTag(interview.jobInfo.id));
   if (interview.jobInfo.userId !== userId) return null;
 
   return interview;

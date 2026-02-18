@@ -2,7 +2,7 @@ import { BackLink } from "@/components/BackLink";
 import { Card, CardContent } from "@/components/ui/card";
 import { SessionForm } from "@/features/sessions/components/SessionForm";
 
-export default function JobInfoNewPage() {
+export default function SessionNewPage() {
   return (
     <div className="container my-4 max-w-5xl space-y-4">
       <BackLink href="/app">나의 상담들</BackLink>

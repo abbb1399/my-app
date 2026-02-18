@@ -8,9 +8,9 @@ import {
 } from "@/components/ui/card";
 import { db } from "@/drizzle/db";
 import { InterviewTable } from "@/drizzle/schema";
-import { getInterviewJobInfoTag } from "@/features/interviews/dbCache";
+import { getInterviewJobInfoTag } from "@/features/chats/dbCache";
 import { SessionBackLink } from "@/features/sessions/components/SessionBackLink";
-import { getJobInfoIdTag } from "@/features/sessions/dbCache";
+import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { and, desc, eq, isNotNull } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
@@ -20,45 +20,45 @@ import { ArrowRightIcon, Loader2Icon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { formatDateTime } from "@/lib/formatters";
 
-export default async function InterviewsPage({
+export default async function ChatsPage({
   params,
 }: {
-  params: Promise<{ jobInfoId: string }>;
+  params: Promise<{ sessionId: string }>;
 }) {
-  const { jobInfoId } = await params;
+  const { sessionId } = await params;
 
   return (
     <div className="container py-4 gap-4 h-screen-header flex flex-col items-start">
-      <SessionBackLink jobInfoId={jobInfoId} />
+      <SessionBackLink sessionId={sessionId} />
 
       <Suspense
         fallback={<Loader2Icon className="size-24 animate-spin m-auto" />}
       >
-        <SuspendedPage jobInfoId={jobInfoId} />
+        <SuspendedPage sessionId={sessionId} />
       </Suspense>
     </div>
   );
 }
 
-async function SuspendedPage({ jobInfoId }: { jobInfoId: string }) {
+async function SuspendedPage({ sessionId }: { sessionId: string }) {
   const { userId, redirectToSignIn } = await getCurrentUser();
 
   if (userId == null) return redirectToSignIn();
 
-  const interviews = await getInterviews(jobInfoId, userId);
+  const chats = await getChats(sessionId, userId);
 
-  if (interviews.length === 0) {
-    return redirect(`/app/sessions/${jobInfoId}/interviews/new`);
+  if (chats.length === 0) {
+    return redirect(`/app/sessions/${sessionId}/chats/new`);
   }
 
   return (
     <div className="space-y-6 w-full">
       <div className="flex gap-2 justify-between">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl">인터뷰</h1>
+        <h1 className="text-3xl md:text-4xl lg:text-5xl">대화들</h1>
         <Button asChild>
-          <Link href={`/app/sessions/${jobInfoId}/interviews/new`}>
+          <Link href={`/app/sessions/${sessionId}/chats/new`}>
             <PlusIcon />
-            <span>새 인터뷰</span>
+            <span>새 대화</span>
           </Link>
         </Button>
       </div>
@@ -66,29 +66,29 @@ async function SuspendedPage({ jobInfoId }: { jobInfoId: string }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 has-hover:*:not-hover:opacity-70">
         <Link
           className="transition-opacity"
-          href={`/app/sessions/${jobInfoId}/interviews/new`}
+          href={`/app/sessions/${sessionId}/chats/new`}
         >
           <Card className="h-full flex items-center justify-center border-dashed border-3 bg-transparent hover:border-primary/50 transition-colors shadow-none">
             <div className="text-lg flex items-center gap-2">
               <PlusIcon className="size-6" />
-              <span>새 인터뷰</span>
+              <span>새 대화</span>
             </div>
           </Card>
         </Link>
 
-        {interviews.map((interview) => (
+        {chats.map((chat) => (
           <Link
             className="hover:scale-[1.02] transition-[transform_opacity]"
-            href={`/app/sessions/${jobInfoId}/interviews/${interview.id}`}
-            key={interview.id}
+            href={`/app/sessions/${sessionId}/chats/${chat.id}`}
+            key={chat.id}
           >
             <Card className="h-full">
               <div className="flex items-center justify-between h-full">
                 <CardHeader className="gap-1 grow">
                   <CardTitle className="text-lg">
-                    {formatDateTime(interview.createdAt)}
+                    {formatDateTime(chat.createdAt)}
                   </CardTitle>
-                  <CardDescription>{interview.duration}</CardDescription>
+                  <CardDescription>{chat.duration}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ArrowRightIcon className="size-6" />
@@ -102,10 +102,10 @@ async function SuspendedPage({ jobInfoId }: { jobInfoId: string }) {
   );
 }
 
-async function getInterviews(jobInfoId: string, userId: string) {
+async function getChats(jobInfoId: string, userId: string) {
   "use cache";
   cacheTag(getInterviewJobInfoTag(jobInfoId));
-  cacheTag(getJobInfoIdTag(jobInfoId));
+  cacheTag(getSessionIdTag(jobInfoId));
 
   const data = await db.query.InterviewTable.findMany({
     where: and(

@@ -1,6 +1,6 @@
 import { db } from "@/drizzle/db";
 import { JobInfoTable } from "@/drizzle/schema";
-import { getJobInfoIdTag } from "@/features/sessions/dbCache";
+import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { canCreateQuestion } from "@/features/questions/permissions";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { and, eq } from "drizzle-orm";
@@ -44,7 +44,7 @@ async function SuspendedComponent({ jobInfoId }: { jobInfoId: string }) {
 
 async function getJobInfo(id: string, userId: string) {
   "use cache";
-  cacheTag(getJobInfoIdTag(id));
+  cacheTag(getSessionIdTag(id));
 
   return db.query.JobInfoTable.findFirst({
     where: and(eq(JobInfoTable.id, id), eq(JobInfoTable.userId, userId)),

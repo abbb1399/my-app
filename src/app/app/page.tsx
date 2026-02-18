@@ -10,7 +10,7 @@ import {
 import { db } from "@/drizzle/db";
 import { JobInfoTable } from "@/drizzle/schema";
 import { SessionForm } from "@/features/sessions/components/SessionForm";
-import { getJobInfoUserTag } from "@/features/sessions/dbCache";
+import { getSessionUserTag } from "@/features/sessions/dbCache";
 import { formatExperienceLevel } from "@/features/sessions/lib/formatters";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { desc, eq } from "drizzle-orm";
@@ -38,7 +38,7 @@ async function SessionInfos() {
 
   if (userId == null) return redirectToSignIn();
 
-  const jobInfos = await getJobInfos(userId);
+  const jobInfos = await getSessions(userId);
 
   if (jobInfos.length === 0) {
     return <NoSessionInfos />;
@@ -119,9 +119,9 @@ function NoSessionInfos() {
   );
 }
 
-async function getJobInfos(userId: string) {
+async function getSessions(userId: string) {
   "use cache";
-  cacheTag(getJobInfoUserTag(userId));
+  cacheTag(getSessionUserTag(userId));
 
   return db.query.JobInfoTable.findMany({
     where: eq(JobInfoTable.userId, userId),

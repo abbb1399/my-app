@@ -22,7 +22,7 @@ import { useParams, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { name: "Interviews", href: "interviews", Icon: SpeechIcon },
+  { name: "상담들", href: "chats", Icon: SpeechIcon },
   { name: "Questions", href: "questions", Icon: BookOpenIcon },
   { name: "Resume", href: "resume", Icon: FileSlidersIcon },
 ];

@@ -1,6 +1,6 @@
 import { db } from "@/drizzle/db";
 import { JobInfoTable } from "@/drizzle/schema";
-import { getJobInfoIdTag } from "@/features/sessions/dbCache";
+import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { canRunResumeAnalysis } from "@/features/resumeAnalyses/permissions";
 import { PLAN_LIMIT_MESSAGE } from "@/lib/errorToast";
 import { analyzeResumeForJob } from "@/services/ai/resumes/ai";
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
 
 async function getJobInfo(id: string, userId: string) {
   "use cache";
-  cacheTag(getJobInfoIdTag(id));
+  cacheTag(getSessionIdTag(id));
 
   return db.query.JobInfoTable.findFirst({
     where: and(eq(JobInfoTable.id, id), eq(JobInfoTable.userId, userId)),

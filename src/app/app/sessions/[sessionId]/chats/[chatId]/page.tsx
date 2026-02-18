@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import { db } from "@/drizzle/db";
 import { InterviewTable } from "@/drizzle/schema";
-import { getInterviewIdTag } from "@/features/interviews/dbCache";
-import { getJobInfoIdTag } from "@/features/sessions/dbCache";
+import { getInterviewIdTag } from "@/features/chats/dbCache";
+import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { formatDateTime } from "@/lib/formatters";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { CondensedMessages } from "@/services/hume/components/CondensedMessages";
@@ -24,20 +24,20 @@ import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ActionButton } from "@/components/ui/action-button";
-import { generateInterviewFeedback } from "@/features/interviews/actions";
+import { generateInterviewFeedback } from "@/features/chats/actions";
 
-export default async function InterviewPage({
+export default async function ChatPage({
   params,
 }: {
-  params: Promise<{ jobInfoId: string; interviewId: string }>;
+  params: Promise<{ sessionId: string; chatId: string }>;
 }) {
-  const { jobInfoId, interviewId } = await params;
+  const { sessionId, chatId } = await params;
 
   const interview = getCurrentUser().then(
     async ({ userId, redirectToSignIn }) => {
       if (userId == null) return redirectToSignIn();
 
-      const interview = await getInterview(interviewId, userId);
+      const interview = await getChats(chatId, userId);
       if (interview == null) return notFound();
 
       return interview;
@@ -46,15 +46,13 @@ export default async function InterviewPage({
 
   return (
     <div className="container my-4 space-y-4">
-      <BackLink href={`/app/sessions/${jobInfoId}/interviews`}>
-        모든 인터뷰
-      </BackLink>
+      <BackLink href={`/app/sessions/${sessionId}/chats`}>모든 대화들</BackLink>
 
       <div className="space-y-6">
         <div className="flex gap-2 justify-between">
           <div className="space-y-2 mb-6">
             <h1 className="text-3xl md:text-4xl">
-              인터뷰:{" "}
+              대화:{" "}
               <SuspendedItem
                 item={interview}
                 fallback={<Skeleton className="w-48" />}
@@ -128,7 +126,7 @@ async function Messages({
   );
 }
 
-async function getInterview(id: string, userId: string) {
+async function getChats(id: string, userId: string) {
   "use cache";
   cacheTag(getInterviewIdTag(id));
 
@@ -139,7 +137,7 @@ async function getInterview(id: string, userId: string) {
 
   if (interview == null) return null;
 
-  cacheTag(getJobInfoIdTag(interview.jobInfo.id));
+  cacheTag(getSessionIdTag(interview.jobInfo.id));
   if (interview.jobInfo.userId !== userId) return null;
 
   return interview;

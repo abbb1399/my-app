@@ -5,35 +5,35 @@ import { cn } from "@/lib/utils";
 import { eq } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { Suspense } from "react";
-import { getJobInfoIdTag } from "../dbCache";
+import { getSessionIdTag } from "../dbCache";
 
 export function SessionBackLink({
-  jobInfoId,
+  sessionId,
   className,
 }: {
-  jobInfoId: string;
+  sessionId: string;
   className?: string;
 }) {
   return (
     <BackLink
-      href={`/app/sessions/${jobInfoId}`}
+      href={`/app/sessions/${sessionId}`}
       className={cn("mb-4", className)}
     >
       <Suspense fallback={"업무 설명"}>
-        <JobName jobInfoId={jobInfoId} />
+        <JobName sessionId={sessionId} />
       </Suspense>
     </BackLink>
   );
 }
 
-async function JobName({ jobInfoId }: { jobInfoId: string }) {
-  const jobInfo = await getJobInfo(jobInfoId);
+async function JobName({ sessionId }: { sessionId: string }) {
+  const jobInfo = await getJobInfo(sessionId);
   return jobInfo?.name ?? "업무 설명";
 }
 
 async function getJobInfo(id: string) {
   "use cache";
-  cacheTag(getJobInfoIdTag(id));
+  cacheTag(getSessionIdTag(id));
 
   return db.query.JobInfoTable.findFirst({
     where: eq(JobInfoTable.id, id),

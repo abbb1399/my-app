@@ -1,4 +1,4 @@
-type CacheTag = "users" | "sessions" | "interviews" | "questions";
+type CacheTag = "users" | "sessions" | "chats" | "questions";
 
 export function getGlobalTag(tag: CacheTag) {
   return `global:${tag}` as const;

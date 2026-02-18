@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { db } from "@/drizzle/db";
 import { JobInfoTable } from "@/drizzle/schema";
-import { getJobInfoIdTag } from "@/features/sessions/dbCache";
+import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { formatExperienceLevel } from "@/features/sessions/lib/formatters";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { and, eq } from "drizzle-orm";
@@ -27,9 +27,9 @@ const options = [
     href: "questions",
   },
   {
-    label: "면접 연습하기",
-    description: "AI 모의 면접을 통해 실제 면접을 연습해보세요.",
-    href: "interviews",
+    label: "상담하기",
+    description: "상담사와 대화해보세요.",
+    href: "chats",
   },
   {
     label: "이력서 수정하기",
@@ -37,7 +37,7 @@ const options = [
     href: "resume",
   },
   {
-    label: "직무 설명 수정하기",
+    label: "상담 정보 수정하기",
     description: "소소한 수정은 이 페이지에서 할 수 있습니다.",
     href: "edit",
   },
@@ -132,7 +132,7 @@ export default async function JobInfoPage({
 
 async function getJobInfo(id: string, userId: string) {
   "use cache";
-  cacheTag(getJobInfoIdTag(id));
+  cacheTag(getSessionIdTag(id));
 
   return db.query.JobInfoTable.findFirst({
     where: and(eq(JobInfoTable.id, id), eq(JobInfoTable.userId, userId)),

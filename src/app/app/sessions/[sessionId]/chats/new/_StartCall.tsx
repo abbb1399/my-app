@@ -3,10 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { env } from "@/data/env/client";
 import { JobInfoTable } from "@/drizzle/schema";
-import {
-  createInterview,
-  updateInterview,
-} from "@/features/interviews/actions";
+import { createChat, updateChat } from "@/features/chats/actions";
 import { errorToast } from "@/lib/errorToast";
 import { CondensedMessages } from "@/services/hume/components/CondensedMessages";
 import { condenseChatMessages } from "@/services/hume/lib/condenseChatMessages";
@@ -32,7 +29,7 @@ export function StartCall({
 }) {
   const { connect, readyState, chatMetadata, callDurationTimestamp } =
     useVoice();
-  const [interviewId, setInterviewId] = useState<string | null>(null);
+  const [chatId, setInterviewId] = useState<string | null>(null);
   const durationRef = useRef(callDurationTimestamp);
   const router = useRouter();
 
@@ -42,36 +39,36 @@ export function StartCall({
 
   // Sync chat ID
   useEffect(() => {
-    if (chatMetadata?.chatId == null || interviewId == null) {
+    if (chatMetadata?.chatId == null || chatId == null) {
       return;
     }
-    updateInterview(interviewId, { humeChatId: chatMetadata.chatId });
-  }, [chatMetadata?.chatId, interviewId]);
+    updateChat(chatId, { humeChatId: chatMetadata.chatId });
+  }, [chatMetadata?.chatId, chatId]);
 
   // Sync duration
   useEffect(() => {
-    if (interviewId == null) return;
+    if (chatId == null) return;
     const intervalId = setInterval(() => {
       if (durationRef.current == null) return;
 
-      updateInterview(interviewId, { duration: durationRef.current });
+      updateChat(chatId, { duration: durationRef.current });
     }, 10000);
 
     return () => clearInterval(intervalId);
-  }, [interviewId]);
+  }, [chatId]);
 
   // Handle disconnect
   useEffect(() => {
     if (readyState !== VoiceReadyState.CLOSED) return;
-    if (interviewId == null) {
-      return router.push(`/app/sessions/${jobInfo.id}/interviews`);
+    if (chatId == null) {
+      return router.push(`/app/sessions/${jobInfo.id}/chats`);
     }
 
     if (durationRef.current != null) {
-      updateInterview(interviewId, { duration: durationRef.current });
+      updateChat(chatId, { duration: durationRef.current });
     }
-    router.push(`/app/session/${jobInfo.id}/interviews/${interviewId}`);
-  }, [interviewId, readyState, router, jobInfo.id]);
+    router.push(`/app/session/${jobInfo.id}/chats/${chatId}`);
+  }, [chatId, readyState, router, jobInfo.id]);
 
   if (readyState === VoiceReadyState.IDLE) {
     return (
@@ -79,7 +76,7 @@ export function StartCall({
         <Button
           size="lg"
           onClick={async () => {
-            const res = await createInterview({ jobInfoId: jobInfo.id });
+            const res = await createChat({ jobInfoId: jobInfo.id });
             if (res.error) {
               return errorToast(res.message);
             }
@@ -100,7 +97,7 @@ export function StartCall({
             });
           }}
         >
-          Start Interview
+          대화 시작하기
         </Button>
       </div>
     );
