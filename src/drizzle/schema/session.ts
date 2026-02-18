@@ -2,7 +2,7 @@ import { pgEnum, pgTable, varchar } from "drizzle-orm/pg-core";
 import { createdAt, id, updatedAt } from "@/drizzle/schemaHelpers";
 import { UserTable } from "./user";
 import { relations } from "drizzle-orm";
-import { InterviewTable } from "./interview";
+import { ChatTable } from "./chat";
 import { QuestionTable } from "./question";
 
 export const experienceLevels = ["junior", "mid-level", "senior"] as const;
@@ -32,5 +32,5 @@ export const sessionRelations = relations(SessionTable, ({ one, many }) => ({
     references: [UserTable.id],
   }),
   questions: many(QuestionTable),
-  interviews: many(InterviewTable),
+  interviews: many(ChatTable),
 }));

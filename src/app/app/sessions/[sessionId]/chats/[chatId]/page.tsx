@@ -10,8 +10,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { db } from "@/drizzle/db";
-import { InterviewTable } from "@/drizzle/schema";
-import { getInterviewIdTag } from "@/features/chats/dbCache";
+import { ChatTable } from "@/drizzle/schema";
+import { getChatIdTag } from "@/features/chats/dbCache";
 import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { formatDateTime } from "@/lib/formatters";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
@@ -128,10 +128,10 @@ async function Messages({
 
 async function getChats(id: string, userId: string) {
   "use cache";
-  cacheTag(getInterviewIdTag(id));
+  cacheTag(getChatIdTag(id));
 
-  const interview = await db.query.InterviewTable.findFirst({
-    where: eq(InterviewTable.id, id),
+  const interview = await db.query.ChatTable.findFirst({
+    where: eq(ChatTable.id, id),
     with: { jobInfo: { columns: { id: true, userId: true } } },
   });
 

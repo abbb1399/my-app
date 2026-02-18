@@ -1,15 +1,13 @@
 import { db } from "@/drizzle/db";
-import { InterviewTable } from "@/drizzle/schema";
+import { ChatTable } from "@/drizzle/schema";
 import { revalidateChatCache } from "./dbCache";
 import { eq } from "drizzle-orm";
 
-export async function insertChat(
-  interview: typeof InterviewTable.$inferInsert,
-) {
+export async function insertChat(interview: typeof ChatTable.$inferInsert) {
   const [newInterview] = await db
-    .insert(InterviewTable)
+    .insert(ChatTable)
     .values(interview)
-    .returning({ id: InterviewTable.id, jobInfoId: InterviewTable.jobInfoId });
+    .returning({ id: ChatTable.id, jobInfoId: ChatTable.jobInfoId });
 
   revalidateChatCache(newInterview);
 
@@ -18,13 +16,13 @@ export async function insertChat(
 
 export async function updateChat(
   id: string,
-  interview: Partial<typeof InterviewTable.$inferInsert>,
+  interview: Partial<typeof ChatTable.$inferInsert>,
 ) {
   const [newInterview] = await db
-    .update(InterviewTable)
+    .update(ChatTable)
     .set(interview)
-    .where(eq(InterviewTable.id, id))
-    .returning({ id: InterviewTable.id, jobInfoId: InterviewTable.jobInfoId });
+    .where(eq(ChatTable.id, id))
+    .returning({ id: ChatTable.id, jobInfoId: ChatTable.jobInfoId });
 
   revalidateChatCache(newInterview);
 

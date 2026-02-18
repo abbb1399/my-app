@@ -2,7 +2,7 @@
 
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { db } from "@/drizzle/db";
-import { InterviewTable, SessionTable } from "@/drizzle/schema";
+import { ChatTable, SessionTable } from "@/drizzle/schema";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { and, eq } from "drizzle-orm";
@@ -134,8 +134,8 @@ async function getChat(id: string, userId: string) {
   "use cache";
   cacheTag(getChatIdTag(id));
 
-  const interview = await db.query.InterviewTable.findFirst({
-    where: eq(InterviewTable.id, id),
+  const interview = await db.query.ChatTable.findFirst({
+    where: eq(ChatTable.id, id),
     with: {
       jobInfo: {
         columns: {

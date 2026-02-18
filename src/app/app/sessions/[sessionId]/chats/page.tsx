@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { db } from "@/drizzle/db";
-import { InterviewTable } from "@/drizzle/schema";
+import { ChatTable } from "@/drizzle/schema";
 import { getChatJobInfoTag } from "@/features/chats/dbCache";
 import { SessionBackLink } from "@/features/sessions/components/SessionBackLink";
 import { getSessionIdTag } from "@/features/sessions/dbCache";
@@ -107,15 +107,15 @@ async function getChats(jobInfoId: string, userId: string) {
   cacheTag(getChatJobInfoTag(jobInfoId));
   cacheTag(getSessionIdTag(jobInfoId));
 
-  const data = await db.query.InterviewTable.findMany({
+  const data = await db.query.ChatTable.findMany({
     where: and(
-      eq(InterviewTable.jobInfoId, jobInfoId),
-      isNotNull(InterviewTable.humeChatId),
+      eq(ChatTable.jobInfoId, jobInfoId),
+      isNotNull(ChatTable.humeChatId),
     ),
     with: {
       jobInfo: { columns: { userId: true } },
     },
-    orderBy: [desc(InterviewTable.updatedAt)],
+    orderBy: [desc(ChatTable.updatedAt)],
   });
 
   return data.filter((interview) => interview.jobInfo.userId === userId);

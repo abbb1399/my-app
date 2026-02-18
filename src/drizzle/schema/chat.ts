@@ -3,7 +3,7 @@ import { id, createdAt, updatedAt } from "@/drizzle/schemaHelpers";
 import { SessionTable } from "./session";
 import { relations } from "drizzle-orm";
 
-export const InterviewTable = pgTable("interviews", {
+export const ChatTable = pgTable("chats", {
   id,
   jobInfoId: uuid()
     .references(() => SessionTable.id, { onDelete: "cascade" })
@@ -15,9 +15,9 @@ export const InterviewTable = pgTable("interviews", {
   updatedAt,
 });
 
-export const interviewRelations = relations(InterviewTable, ({ one }) => ({
+export const interviewRelations = relations(ChatTable, ({ one }) => ({
   jobInfo: one(SessionTable, {
-    fields: [InterviewTable.jobInfoId],
+    fields: [ChatTable.jobInfoId],
     references: [SessionTable.id],
   }),
 }));
