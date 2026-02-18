@@ -12,7 +12,6 @@ import {
 import { db } from "@/drizzle/db";
 import { SessionTable } from "@/drizzle/schema";
 import { getSessionIdTag } from "@/features/sessions/dbCache";
-import { formatExperienceLevel } from "@/features/sessions/lib/formatters";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { and, eq } from "drizzle-orm";
 import { ArrowRightIcon } from "lucide-react";
@@ -73,27 +72,36 @@ export default async function JobInfoPage({
               <SuspendedItem
                 item={jobInfo}
                 fallback={<Skeleton className="w-48" />}
-                result={(j) => j.name}
+                result={(j) => j.title ?? "제목 없음"}
               />
             </h1>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <SuspendedItem
                 item={jobInfo}
-                fallback={<Skeleton className="w-12" />}
-                result={(j) => (
-                  <Badge variant="secondary">
-                    {formatExperienceLevel(j.experienceLevel)}
-                  </Badge>
-                )}
+                fallback={null}
+                result={(j) =>
+                  j.moodRating != null ? (
+                    <Badge variant="secondary">기분 {j.moodRating}/10</Badge>
+                  ) : null
+                }
               />
               <SuspendedItem
                 item={jobInfo}
                 fallback={null}
-                result={(j) => {
-                  return (
-                    j.title && <Badge variant="secondary">{j.title}</Badge>
-                  );
-                }}
+                result={(j) =>
+                  j.title ? (
+                    <Badge variant="secondary">{j.title}</Badge>
+                  ) : null
+                }
+              />
+              <SuspendedItem
+                item={jobInfo}
+                fallback={null}
+                result={(j) =>
+                  (j.topicTags ?? []).map((tag) => (
+                    <Badge key={tag} variant="outline">{tag}</Badge>
+                  ))
+                }
               />
             </div>
           </div>

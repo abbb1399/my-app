@@ -28,7 +28,7 @@ export function SessionBackLink({
 
 async function JobName({ sessionId }: { sessionId: string }) {
   const jobInfo = await getJobInfo(sessionId);
-  return jobInfo?.name ?? "업무 설명";
+  return jobInfo?.title ?? "제목 없음";
 }
 
 async function getJobInfo(id: string) {

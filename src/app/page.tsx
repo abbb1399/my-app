@@ -36,7 +36,7 @@ function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-2">
             <BrainCircuitIcon className="size-8 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">Landr</h1>
+            <h1 className="text-2xl font-bold text-foreground">마음 일기</h1>
           </div>
           <Suspense
             fallback={

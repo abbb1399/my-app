@@ -1,27 +1,25 @@
-import { pgEnum, pgTable, varchar } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, varchar, integer, jsonb } from "drizzle-orm/pg-core";
 import { createdAt, id, updatedAt } from "@/drizzle/schemaHelpers";
 import { UserTable } from "./user";
 import { relations } from "drizzle-orm";
 import { ChatTable } from "./chat";
-import { QuestionTable } from "./question";
 
-export const experienceLevels = ["junior", "mid-level", "senior"] as const;
-export type ExperienceLevel = (typeof experienceLevels)[number];
+export const sessionStatuses = ["in_progress", "completed"] as const;
+export type SessionStatus = (typeof sessionStatuses)[number];
 
-export const ExperienceLevelEnum = pgEnum(
-  "session_experience_level",
-  experienceLevels,
-);
+export const SessionStatusEnum = pgEnum("session_status", sessionStatuses);
 
-export const SessionTable = pgTable("session", {
+export const SessionTable = pgTable("sessions", {
   id,
   title: varchar(),
-  name: varchar().notNull(),
-  experienceLevel: ExperienceLevelEnum().notNull(),
-  description: varchar().notNull(),
+  description: varchar(),
   userId: varchar()
     .references(() => UserTable.id, { onDelete: "cascade" })
     .notNull(),
+  status: SessionStatusEnum().notNull().default("in_progress"),
+  moodRating: integer(), // 초기 또는 최종 감정 평가 (1-10)
+  emotionalState: jsonb().$type<string[]>(), // ["anxious", "depressed", "happy"]
+  topicTags: jsonb().$type<string[]>(), // ["work_stress", "relationships", "sleep"]
   createdAt,
   updatedAt,
 });
@@ -31,6 +29,5 @@ export const sessionRelations = relations(SessionTable, ({ one, many }) => ({
     fields: [SessionTable.userId],
     references: [UserTable.id],
   }),
-  questions: many(QuestionTable),
-  interviews: many(ChatTable),
+  chats: many(ChatTable),
 }));

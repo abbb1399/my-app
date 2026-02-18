@@ -11,7 +11,6 @@ import { db } from "@/drizzle/db";
 import { SessionTable } from "@/drizzle/schema";
 import { SessionForm } from "@/features/sessions/components/SessionForm";
 import { getSessionUserTag } from "@/features/sessions/dbCache";
-import { formatExperienceLevel } from "@/features/sessions/lib/formatters";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { desc, eq } from "drizzle-orm";
 import { ArrowRightIcon, Loader2, PlusIcon } from "lucide-react";
@@ -67,18 +66,21 @@ async function SessionInfos() {
               <div className="flex items-center justify-between h-full">
                 <div className="space-y-4 h-full">
                   <CardHeader>
-                    <CardTitle className="text-lg">{jobInfo.name}</CardTitle>
+                    <CardTitle className="text-lg">{jobInfo.title ?? "제목 없음"}</CardTitle>
                   </CardHeader>
                   <CardContent className="text-muted-foreground line-clamp-3">
                     {jobInfo.description}
                   </CardContent>
-                  <CardFooter className="flex gap-2">
-                    <Badge variant="outline">
-                      {formatExperienceLevel(jobInfo.experienceLevel)}
-                    </Badge>
+                  <CardFooter className="flex gap-2 flex-wrap">
                     {jobInfo.title && (
                       <Badge variant="outline">{jobInfo.title}</Badge>
                     )}
+                    {jobInfo.moodRating != null && (
+                      <Badge variant="outline">기분 {jobInfo.moodRating}/10</Badge>
+                    )}
+                    {(jobInfo.topicTags ?? []).map((tag) => (
+                      <Badge key={tag} variant="secondary">{tag}</Badge>
+                    ))}
                   </CardFooter>
                 </div>
                 <CardContent>

@@ -27,7 +27,7 @@ type Status = "awaiting-answer" | "awaiting-difficulty" | "init";
 export function NewQuestionClientPage({
   jobInfo,
 }: {
-  jobInfo: Pick<typeof SessionTable.$inferSelect, "id" | "name" | "title">;
+  jobInfo: Pick<typeof SessionTable.$inferSelect, "id" | "title">;
 }) {
   const [status, setStatus] = useState<Status>("init");
   const [answer, setAnswer] = useState<string | null>(null);
@@ -77,7 +77,7 @@ export function NewQuestionClientPage({
       <div className="container flex gap-4 mt-4 items-center justify-between">
         <div className="grow basis-0">
           <BackLink href={`/app/sessions/${jobInfo.id}`}>
-            {jobInfo.name}
+            {jobInfo.title ?? "제목 없음"}
           </BackLink>
         </div>
 
