@@ -13,14 +13,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export function StartCall({
-  jobInfo,
+  session,
   user,
   accessToken,
 }: {
   accessToken: string;
-  jobInfo: Pick<
+  session: Pick<
     typeof SessionTable.$inferSelect,
-    "id" | "title" | "description" | "experienceLevel"
+    "id" | "title" | "description" | "emotionalState" | "topicTags"
   >;
   user: {
     name: string;
@@ -61,14 +61,14 @@ export function StartCall({
   useEffect(() => {
     if (readyState !== VoiceReadyState.CLOSED) return;
     if (chatId == null) {
-      return router.push(`/app/sessions/${jobInfo.id}/chats`);
+      return router.push(`/app/sessions/${session.id}/chats`);
     }
 
     if (durationRef.current != null) {
       updateChat(chatId, { duration: durationRef.current });
     }
-    router.push(`/app/session/${jobInfo.id}/chats/${chatId}`);
-  }, [chatId, readyState, router, jobInfo.id]);
+    router.push(`/app/sessions/${session.id}/chats/${chatId}`);
+  }, [chatId, readyState, router, session.id]);
 
   if (readyState === VoiceReadyState.IDLE) {
     return (
@@ -76,7 +76,7 @@ export function StartCall({
         <Button
           size="lg"
           onClick={async () => {
-            const res = await createChat({ jobInfoId: jobInfo.id });
+            const res = await createChat({ jobInfoId: session.id });
             if (res.error) {
               return errorToast(res.message);
             }
@@ -89,9 +89,10 @@ export function StartCall({
                 type: "session_settings",
                 variables: {
                   userName: user.name,
-                  title: jobInfo.title || "Not Specified",
-                  description: jobInfo.description,
-                  experienceLevel: jobInfo.experienceLevel,
+                  title: session.title || "Not Specified",
+                  description: session.description ?? "",
+                  emotionalState: session.emotionalState?.join(", ") ?? "",
+                  topicTags: session.topicTags?.join(", ") ?? "",
                 },
               },
             });

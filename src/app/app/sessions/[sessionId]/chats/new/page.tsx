@@ -38,9 +38,9 @@ async function SuspendedComponent({ sessionId }: { sessionId: string }) {
 
   if (!(await canCreateChat())) return redirect("/app/upgrade");
 
-  const jobInfo = await getJobInfo(sessionId, userId);
+  const session = await getSession(sessionId, userId);
 
-  if (jobInfo == null) return notFound();
+  if (session == null) return notFound();
 
   const accessToken = await fetchAccessToken({
     apiKey: env.HUME_API_KEY,
@@ -49,12 +49,12 @@ async function SuspendedComponent({ sessionId }: { sessionId: string }) {
 
   return (
     <VoiceProvider>
-      <StartCall jobInfo={jobInfo} user={user} accessToken={accessToken} />
+      <StartCall session={session} user={user} accessToken={accessToken} />
     </VoiceProvider>
   );
 }
 
-async function getJobInfo(id: string, userId: string) {
+async function getSession(id: string, userId: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 
