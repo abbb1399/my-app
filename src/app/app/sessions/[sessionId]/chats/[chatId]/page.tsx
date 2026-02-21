@@ -132,13 +132,13 @@ async function getChats(id: string, userId: string) {
 
   const interview = await db.query.ChatTable.findFirst({
     where: eq(ChatTable.id, id),
-    with: { jobInfo: { columns: { id: true, userId: true } } },
+    with: { session: { columns: { id: true, userId: true } } },
   });
 
   if (interview == null) return null;
 
-  cacheTag(getSessionIdTag(interview.jobInfo.id));
-  if (interview.jobInfo.userId !== userId) return null;
+  cacheTag(getSessionIdTag(interview.session.id));
+  if (interview.session.userId !== userId) return null;
 
   return interview;
 }

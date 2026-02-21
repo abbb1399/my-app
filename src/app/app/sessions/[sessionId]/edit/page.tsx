@@ -28,7 +28,7 @@ export default async function SessionNewPage({
           <Suspense
             fallback={<Loader2 className="size-24 animate-spin mx-auto" />}
           >
-            <SuspendedForm jobInfoId={sessionId} />
+            <SuspendedForm sessionId={sessionId} />
           </Suspense>
         </CardContent>
       </Card>
@@ -36,11 +36,11 @@ export default async function SessionNewPage({
   );
 }
 
-async function SuspendedForm({ jobInfoId }: { jobInfoId: string }) {
+async function SuspendedForm({ sessionId }: { sessionId: string }) {
   const { userId, redirectToSignIn } = await getCurrentUser();
   if (userId == null) return redirectToSignIn();
 
-  const session = await getSession(jobInfoId, userId);
+  const session = await getSession(sessionId, userId);
   if (session == null) return notFound();
 
   return <SessionForm session={session} />;

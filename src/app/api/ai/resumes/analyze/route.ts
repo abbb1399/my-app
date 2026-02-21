@@ -17,9 +17,9 @@ export async function POST(req: Request) {
 
   const formData = await req.formData();
   const resumeFile = formData.get("resumeFile") as File;
-  const jobInfoId = formData.get("jobInfoId") as string;
+  const sessionId = formData.get("sessionId") as string;
 
-  if (!resumeFile || !jobInfoId) {
+  if (!resumeFile || !sessionId) {
     return new Response("Invalid request", { status: 400 });
   }
 
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     });
   }
 
-  const jobInfo = await getJobInfo(jobInfoId, userId);
+  const jobInfo = await getJobInfo(sessionId, userId);
   if (jobInfo == null) {
     return new Response("권한이 없습니다.", {
       status: 403,

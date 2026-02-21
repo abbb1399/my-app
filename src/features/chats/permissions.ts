@@ -30,7 +30,7 @@ async function getChatCount(userId: string) {
   const [{ count: c }] = await db
     .select({ count: count() })
     .from(ChatTable)
-    .innerJoin(SessionTable, eq(ChatTable.jobInfoId, SessionTable.id))
+    .innerJoin(SessionTable, eq(ChatTable.sessionId, SessionTable.id))
     .where(
       and(eq(SessionTable.userId, userId), isNotNull(ChatTable.humeChatId)),
     );

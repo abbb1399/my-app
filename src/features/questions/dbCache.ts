@@ -5,8 +5,8 @@ export function getQuestionGlobalTag() {
   return getGlobalTag("questions");
 }
 
-export function getQuestionJobInfoTag(jobInfoId: string) {
-  return getSessionTag("questions", jobInfoId);
+export function getQuestionSessionTag(sessionId: string) {
+  return getSessionTag("questions", sessionId);
 }
 
 export function getQuestionIdTag(id: string) {
@@ -15,12 +15,12 @@ export function getQuestionIdTag(id: string) {
 
 export function revalidateQuestionCache({
   id,
-  jobInfoId,
+  sessionId,
 }: {
   id: string;
-  jobInfoId: string;
+  sessionId: string;
 }) {
   revalidateTag(getQuestionGlobalTag(), "max");
-  revalidateTag(getQuestionJobInfoTag(jobInfoId), "max");
+  revalidateTag(getQuestionSessionTag(sessionId), "max");
   revalidateTag(getQuestionIdTag(id), "max");
 }

@@ -29,7 +29,7 @@ async function getQuestionCount(userId: string) {
   const [{ count: c }] = await db
     .select({ count: count() })
     .from(QuestionTable)
-    .innerJoin(SessionTable, eq(QuestionTable.jobInfoId, SessionTable.id))
+    .innerJoin(SessionTable, eq(QuestionTable.sessionId, SessionTable.id))
     .where(eq(SessionTable.userId, userId));
 
   return c;

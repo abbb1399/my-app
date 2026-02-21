@@ -8,24 +8,24 @@ import { ResumePageClient } from "./_client";
 export default async function ResumePage({
   params,
 }: {
-  params: Promise<{ jobInfoId: string }>;
+  params: Promise<{ sessionId: string }>;
 }) {
-  const { jobInfoId } = await params;
+  const { sessionId } = await params;
 
   return (
     <div className="container py-4 space-y-4 h-screen-header flex flex-col items-start">
-      <SessionBackLink sessionId={jobInfoId} />
+      <SessionBackLink sessionId={sessionId} />
       <Suspense
         fallback={<Loader2Icon className="animate-spin size-24 m-auto" />}
       >
-        <SuspendedComponent jobInfoId={jobInfoId} />
+        <SuspendedComponent sessionId={sessionId} />
       </Suspense>
     </div>
   );
 }
 
-async function SuspendedComponent({ jobInfoId }: { jobInfoId: string }) {
+async function SuspendedComponent({ sessionId }: { sessionId: string }) {
   if (!(await canRunResumeAnalysis())) return redirect("/app/upgrade");
 
-  return <ResumePageClient jobInfoId={jobInfoId} />;
+  return <ResumePageClient sessionId={sessionId} />;
 }

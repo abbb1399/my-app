@@ -10,12 +10,12 @@ export async function insertQuestion(
     .values(question)
     .returning({
       id: QuestionTable.id,
-      jobInfoId: QuestionTable.jobInfoId,
+      sessionId: QuestionTable.sessionId,
     });
 
   revalidateQuestionCache({
     id: newQuestion.id,
-    jobInfoId: newQuestion.jobInfoId,
+    sessionId: newQuestion.sessionId,
   });
 
   return newQuestion;

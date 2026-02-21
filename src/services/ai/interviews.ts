@@ -5,13 +5,13 @@ import { google } from "./models/google";
 
 export async function generateAiInterviewFeedback({
   humeChatId,
-  jobInfo,
+  session,
   userName,
 }: {
   humeChatId: string;
-  jobInfo: Pick<
+  session: Pick<
     typeof SessionTable.$inferSelect,
-    "title" | "description" | "experienceLevel"
+    "title" | "description"
   >;
   userName: string;
 }) {
@@ -44,9 +44,8 @@ export async function generateAiInterviewFeedback({
 Additional Context:
 
 Interviewee's name: ${userName}
-Job title: ${jobInfo.title}
-Job description: ${jobInfo.description}
-Job Experience level: ${jobInfo.experienceLevel}
+Session title: ${session.title}
+Session description: ${session.description}
 
 ---
 

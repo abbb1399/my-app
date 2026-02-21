@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { db } from "@/drizzle/db";
 import { ChatTable } from "@/drizzle/schema";
-import { getChatJobInfoTag } from "@/features/chats/dbCache";
+import { getChatSessionTag } from "@/features/chats/dbCache";
 import { SessionBackLink } from "@/features/sessions/components/SessionBackLink";
 import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
@@ -102,21 +102,21 @@ async function SuspendedPage({ sessionId }: { sessionId: string }) {
   );
 }
 
-async function getChats(jobInfoId: string, userId: string) {
+async function getChats(sessionId: string, userId: string) {
   "use cache";
-  cacheTag(getChatJobInfoTag(jobInfoId));
-  cacheTag(getSessionIdTag(jobInfoId));
+  cacheTag(getChatSessionTag(sessionId));
+  cacheTag(getSessionIdTag(sessionId));
 
   const data = await db.query.ChatTable.findMany({
     where: and(
-      eq(ChatTable.jobInfoId, jobInfoId),
+      eq(ChatTable.sessionId, sessionId),
       isNotNull(ChatTable.humeChatId),
     ),
     with: {
-      jobInfo: { columns: { userId: true } },
+      session: { columns: { userId: true } },
     },
     orderBy: [desc(ChatTable.updatedAt)],
   });
 
-  return data.filter((interview) => interview.jobInfo.userId === userId);
+  return data.filter((chat) => chat.session.userId === userId);
 }

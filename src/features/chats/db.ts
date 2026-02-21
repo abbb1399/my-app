@@ -7,7 +7,7 @@ export async function insertChat(interview: typeof ChatTable.$inferInsert) {
   const [newInterview] = await db
     .insert(ChatTable)
     .values(interview)
-    .returning({ id: ChatTable.id, jobInfoId: ChatTable.jobInfoId });
+    .returning({ id: ChatTable.id, sessionId: ChatTable.sessionId });
 
   revalidateChatCache(newInterview);
 
@@ -22,7 +22,7 @@ export async function updateChat(
     .update(ChatTable)
     .set(interview)
     .where(eq(ChatTable.id, id))
-    .returning({ id: ChatTable.id, jobInfoId: ChatTable.jobInfoId });
+    .returning({ id: ChatTable.id, sessionId: ChatTable.sessionId });
 
   revalidateChatCache(newInterview);
 

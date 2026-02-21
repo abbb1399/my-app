@@ -13,7 +13,7 @@ export const QuestionDifficultyEnum = pgEnum(
 
 export const QuestionTable = pgTable("questions", {
   id,
-  jobInfoId: uuid()
+  sessionId: uuid()
     .references(() => SessionTable.id, { onDelete: "cascade" })
     .notNull(),
   text: varchar().notNull(),
@@ -23,8 +23,8 @@ export const QuestionTable = pgTable("questions", {
 });
 
 export const questionRelations = relations(QuestionTable, ({ one }) => ({
-  jobInfo: one(SessionTable, {
-    fields: [QuestionTable.jobInfoId],
+  session: one(SessionTable, {
+    fields: [QuestionTable.sessionId],
     references: [SessionTable.id],
   }),
 }));

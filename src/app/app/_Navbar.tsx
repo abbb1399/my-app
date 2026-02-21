@@ -29,7 +29,7 @@ const navLinks = [
 
 export function Navbar({ user }: { user: { name: string; imageUrl: string } }) {
   const { openUserProfile } = useClerk();
-  const { jobInfoId } = useParams();
+  const { sessionId } = useParams();
   const pathName = usePathname();
 
   return (
@@ -41,9 +41,9 @@ export function Navbar({ user }: { user: { name: string; imageUrl: string } }) {
         </Link>
 
         <div className="flex items-center gap-4">
-          {typeof jobInfoId === "string" &&
+          {typeof sessionId === "string" &&
             navLinks.map(({ name, href, Icon }) => {
-              const hrefPath = `/app/sessions/${jobInfoId}/${href}`;
+              const hrefPath = `/app/sessions/${sessionId}/${href}`;
 
               return (
                 <Button

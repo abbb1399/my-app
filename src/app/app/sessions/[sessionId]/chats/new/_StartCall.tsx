@@ -76,7 +76,7 @@ export function StartCall({
         <Button
           size="lg"
           onClick={async () => {
-            const res = await createChat({ jobInfoId: session.id });
+            const res = await createChat({ sessionId: session.id });
             if (res.error) {
               return errorToast(res.message);
             }

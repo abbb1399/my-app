@@ -49,12 +49,12 @@ async function getQuestion(id: string, userId: string) {
 
   const question = await db.query.QuestionTable.findFirst({
     where: eq(QuestionTable.id, id),
-    with: { jobInfo: { columns: { id: true, userId: true } } },
+    with: { session: { columns: { id: true, userId: true } } },
   });
 
   if (question == null) return null;
-  cacheTag(getSessionIdTag(question.jobInfo.id));
+  cacheTag(getSessionIdTag(question.session.id));
 
-  if (question.jobInfo.userId !== userId) return null;
+  if (question.session.userId !== userId) return null;
   return question;
 }

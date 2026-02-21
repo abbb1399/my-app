@@ -6,7 +6,7 @@ import {
 } from "@/drizzle/schema";
 import { getSessionIdTag } from "@/features/sessions/dbCache";
 import { insertQuestion } from "@/features/questions/db";
-import { getQuestionJobInfoTag } from "@/features/questions/dbCache";
+import { getQuestionSessionTag } from "@/features/questions/dbCache";
 import { canCreateQuestion } from "@/features/questions/permissions";
 import { PLAN_LIMIT_MESSAGE } from "@/lib/errorToast";
 import { generateAiQuestion } from "@/services/ai/questions";
@@ -18,7 +18,7 @@ import z from "zod";
 
 const schema = z.object({
   prompt: z.enum(questionDifficulties),
-  jobInfoId: z.string().min(1),
+  sessionId: z.string().min(1),
 });
 
 export async function POST(req: Request) {
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     return new Response("질문 생성 실패", { status: 400 });
   }
 
-  const { prompt: difficulty, jobInfoId } = result.data;
+  const { prompt: difficulty, sessionId } = result.data;
   const { userId } = await getCurrentUser();
 
   if (userId == null) {
@@ -40,25 +40,25 @@ export async function POST(req: Request) {
     return new Response(PLAN_LIMIT_MESSAGE, { status: 403 });
   }
 
-  const jobInfo = await getJobInfo(jobInfoId, userId);
-  if (jobInfo == null) {
+  const session = await getSession(sessionId, userId);
+  if (session == null) {
     return new Response("권한이 없습니다.", {
       status: 403,
     });
   }
 
-  const previousQuestions = await getQuestions(jobInfoId);
+  const previousQuestions = await getQuestions(sessionId);
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       const streamResult = generateAiQuestion({
         previousQuestions,
-        jobInfo,
+        jobInfo: session,
         difficulty,
         onFinish: async (question) => {
           const { id } = await insertQuestion({
             text: question,
-            jobInfoId,
+            sessionId,
             difficulty,
           });
 
@@ -76,17 +76,17 @@ export async function POST(req: Request) {
   return createUIMessageStreamResponse({ stream });
 }
 
-async function getQuestions(jobInfoId: string) {
+async function getQuestions(sessionId: string) {
   "use cache";
-  cacheTag(getQuestionJobInfoTag(jobInfoId));
+  cacheTag(getQuestionSessionTag(sessionId));
 
   return db.query.QuestionTable.findMany({
-    where: eq(QuestionTable.jobInfoId, jobInfoId),
+    where: eq(QuestionTable.sessionId, sessionId),
     orderBy: asc(QuestionTable.createdAt),
   });
 }
 
-async function getJobInfo(id: string, userId: string) {
+async function getSession(id: string, userId: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 

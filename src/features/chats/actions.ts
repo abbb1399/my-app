@@ -13,9 +13,9 @@ import { PLAN_LIMIT_MESSAGE } from "@/lib/errorToast";
 import { generateAiInterviewFeedback } from "@/services/ai/interviews";
 
 export async function createChat({
-  jobInfoId,
+  sessionId,
 }: {
-  jobInfoId: string;
+  sessionId: string;
 }): Promise<{ error: true; message: string } | { error: false; id: string }> {
   const { userId } = await getCurrentUser();
 
@@ -33,26 +33,26 @@ export async function createChat({
     };
   }
 
-  const jobInfo = await getJobInfo(jobInfoId, userId);
+  const session = await getSession(sessionId, userId);
 
-  if (jobInfo == null) {
+  if (session == null) {
     return {
       error: true,
       message: "권한이 없습니다.",
     };
   }
 
-  const interview = await insertChat({
-    jobInfoId,
-    duration: "00:00:00",
+  const chat = await insertChat({
+    sessionId,
+    duration: 0,
   });
 
-  return { error: false, id: interview.id };
+  return { error: false, id: chat.id };
 }
 
 export async function updateChat(
   id: string,
-  data: { humeChatId?: string; duration?: string },
+  data: { humeChatId?: string; duration?: number },
 ) {
   const { userId } = await getCurrentUser();
 
@@ -63,9 +63,9 @@ export async function updateChat(
     };
   }
 
-  const interview = await getChat(id, userId);
+  const chat = await getChat(id, userId);
 
-  if (interview == null) {
+  if (chat == null) {
     return {
       error: true,
       message: "권한이 없습니다.",
@@ -87,16 +87,16 @@ export async function generateInterviewFeedback(chatId: string) {
     };
   }
 
-  const interview = await getChat(chatId, userId);
+  const chat = await getChat(chatId, userId);
 
-  if (interview == null) {
+  if (chat == null) {
     return {
       error: true,
       message: "권한이 없습니다.",
     };
   }
 
-  if (interview.humeChatId == null) {
+  if (chat.humeChatId == null) {
     return {
       error: true,
       message: "대화가 아직 완료되지 않았습니다.",
@@ -104,8 +104,8 @@ export async function generateInterviewFeedback(chatId: string) {
   }
 
   const feedback = await generateAiInterviewFeedback({
-    humeChatId: interview.humeChatId,
-    jobInfo: interview.jobInfo,
+    humeChatId: chat.humeChatId,
+    session: chat.session,
     userName: user.name,
   });
 
@@ -121,7 +121,7 @@ export async function generateInterviewFeedback(chatId: string) {
   return { error: false };
 }
 
-async function getJobInfo(id: string, userId: string) {
+async function getSession(id: string, userId: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 
@@ -134,25 +134,24 @@ async function getChat(id: string, userId: string) {
   "use cache";
   cacheTag(getChatIdTag(id));
 
-  const interview = await db.query.ChatTable.findFirst({
+  const chat = await db.query.ChatTable.findFirst({
     where: eq(ChatTable.id, id),
     with: {
-      jobInfo: {
+      session: {
         columns: {
           id: true,
           userId: true,
           description: true,
           title: true,
-          experienceLevel: true,
         },
       },
     },
   });
 
-  if (interview == null) return null;
+  if (chat == null) return null;
 
-  cacheTag(getSessionIdTag(interview.jobInfo.id));
-  if (interview.jobInfo.userId !== userId) return null;
+  cacheTag(getSessionIdTag(chat.session.id));
+  if (chat.session.userId !== userId) return null;
 
-  return interview;
+  return chat;
 }

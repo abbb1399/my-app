@@ -5,8 +5,8 @@ export function getChatglobalTag() {
   return getGlobalTag("chats");
 }
 
-export function getChatJobInfoTag(jobInfoId: string) {
-  return getSessionTag("chats", jobInfoId);
+export function getChatSessionTag(sessionId: string) {
+  return getSessionTag("chats", sessionId);
 }
 
 export function getChatIdTag(chatId: string) {
@@ -15,12 +15,12 @@ export function getChatIdTag(chatId: string) {
 
 export function revalidateChatCache({
   id,
-  jobInfoId,
+  sessionId,
 }: {
   id: string;
-  jobInfoId: string;
+  sessionId: string;
 }) {
   revalidateTag(getChatglobalTag(), "max");
-  revalidateTag(getChatJobInfoTag(jobInfoId), "max");
+  revalidateTag(getChatSessionTag(sessionId), "max");
   revalidateTag(getChatIdTag(id), "max");
 }

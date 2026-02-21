@@ -103,7 +103,7 @@ export function NewQuestionClientPage({
             setQuestion("");
             setFeedback("");
             setAnswer(null);
-            generateQuestion(difficulty, { body: { jobInfoId: jobInfo.id } });
+            generateQuestion(difficulty, { body: { sessionId: jobInfo.id } });
           }}
         />
         <div className="grow hidden md:block" />

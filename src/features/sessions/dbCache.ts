@@ -9,8 +9,8 @@ export function getSessionUserTag(userId: string) {
   return getUserTag("sessions", userId);
 }
 
-export function getSessionIdTag(jobInfoId: string) {
-  return getIdTag("sessions", jobInfoId);
+export function getSessionIdTag(sessionId: string) {
+  return getIdTag("sessions", sessionId);
 }
 
 export function revalidateSessionCache({
