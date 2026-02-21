@@ -12,6 +12,11 @@ import { Loader2Icon, MicIcon, MicOffIcon, PhoneOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+function parseDuration(timestamp: string): number {
+  const [minutes, seconds] = timestamp.split(":").map(Number);
+  return minutes * 60 + seconds;
+}
+
 export function StartCall({
   session,
   user,
@@ -51,7 +56,7 @@ export function StartCall({
     const intervalId = setInterval(() => {
       if (durationRef.current == null) return;
 
-      updateChat(chatId, { duration: durationRef.current });
+      updateChat(chatId, { duration: parseDuration(durationRef.current) });
     }, 10000);
 
     return () => clearInterval(intervalId);
@@ -65,7 +70,7 @@ export function StartCall({
     }
 
     if (durationRef.current != null) {
-      updateChat(chatId, { duration: durationRef.current });
+      updateChat(chatId, { duration: parseDuration(durationRef.current) });
     }
     router.push(`/app/sessions/${session.id}/chats/${chatId}`);
   }, [chatId, readyState, router, session.id]);
