@@ -41,7 +41,7 @@ function Navbar() {
           <Suspense
             fallback={
               <SignInButton forceRedirectUrl="/app">
-                <Button variant="outline">Sign In</Button>
+                <Button variant="outline">로그인</Button>
               </SignInButton>
             }
           >
@@ -59,7 +59,7 @@ async function NavButton() {
   if (userId == null) {
     return (
       <SignInButton forceRedirectUrl="/app">
-        <Button variant="outline">Sign In</Button>
+        <Button variant="outline">로그인</Button>
       </SignInButton>
     );
   }

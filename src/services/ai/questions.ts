@@ -7,14 +7,14 @@ import { streamText } from "ai";
 import { google } from "./models/google";
 
 export function generateAiQuestion({
-  jobInfo,
+  session,
   previousQuestions,
   difficulty,
   onFinish,
 }: {
-  jobInfo: Pick<
+  session: Pick<
     typeof SessionTable.$inferInsert,
-    "title" | "description" | "experienceLevel"
+    "title" | "description" | "topicTags"
   >;
   previousQuestions: Pick<
     typeof QuestionTable.$inferSelect,
@@ -38,21 +38,19 @@ export function generateAiQuestion({
         content: difficulty,
       },
     ],
-    system: `You are an AI assistant that creates technical interview questions tailored to a specific job role. Your task is to generate one **realistic and relevant** technical question that matches the skill requirements of the job and aligns with the difficulty level provided by the user.
+    system: `You are an AI assistant that creates psychological counseling questions tailored to a specific session. Your task is to generate one **realistic and relevant** question that matches the session's context and aligns with the difficulty level provided by the user.
 
-Job Information:
-- Job Description: \`${jobInfo.description}\`
-- Experience Level: \`${jobInfo.experienceLevel}\`
-${jobInfo.title ? `\n- Job Title: \`${jobInfo.title}\`` : ""}
+Session Information:
+${session.title ? `- Session Title: \`${session.title}\`` : ""}
+${session.description ? `- Session Description: \`${session.description}\`` : ""}
+${session.topicTags?.length ? `- Topic Tags: ${session.topicTags.join(", ")}` : ""}
 
 Guidelines:
-- The question must reflect the skills and technologies mentioned in the job description.
-- Make sure the question is appropriately scoped for the specified experience level.
-- A difficulty level of "easy", "medium", or "hard" is provided by the user and should be used to tailor the question.
-- Prefer practical, real-world challenges over trivia.
-- Return only the question, clearly formatted (e.g., with code snippets or bullet points if needed). Do not include the answer.
+- The question must reflect the themes and topics mentioned in the session description.
+- A difficulty level of "easy", "medium", or "hard" is provided by the user and should be used to tailor the depth of the question.
+- Prefer open-ended, reflective questions that encourage self-exploration.
+- Return only the question, clearly formatted. Do not include the answer.
 - Return only one question at a time.
-- It is ok to ask a question about just a single part of the job description, such as a specific technology or skill (e.g., if the job description is for a Next.js, Drizzle, and TypeScript developer, you can ask a TypeScript only question).
 - The question should be formatted as markdown.
 - Stop generating output as soon you have provided the full question.`,
   });

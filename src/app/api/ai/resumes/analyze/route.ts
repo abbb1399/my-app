@@ -40,8 +40,8 @@ export async function POST(req: Request) {
     });
   }
 
-  const jobInfo = await getJobInfo(sessionId, userId);
-  if (jobInfo == null) {
+  const session = await getSession(sessionId, userId);
+  if (session == null) {
     return new Response("권한이 없습니다.", {
       status: 403,
     });
@@ -53,13 +53,13 @@ export async function POST(req: Request) {
 
   const res = await analyzeResumeForJob({
     resumeFile,
-    jobInfo,
+    session,
   });
 
   return res.toTextStreamResponse();
 }
 
-async function getJobInfo(id: string, userId: string) {
+async function getSession(id: string, userId: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 

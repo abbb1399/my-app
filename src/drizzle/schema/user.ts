@@ -13,5 +13,5 @@ export const UserTable = pgTable("users", {
 });
 
 export const userRelations = relations(UserTable, ({ many }) => ({
-  jobInfos: many(SessionTable),
+  sessions: many(SessionTable),
 }));

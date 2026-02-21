@@ -3,31 +3,31 @@ import { SessionTable } from "@/drizzle/schema";
 import { revalidateSessionCache } from "./dbCache";
 import { eq } from "drizzle-orm";
 
-export async function insertSession(jobInfo: typeof SessionTable.$inferInsert) {
-  const [newJobInfo] = await db.insert(SessionTable).values(jobInfo).returning({
+export async function insertSession(session: typeof SessionTable.$inferInsert) {
+  const [newSession] = await db.insert(SessionTable).values(session).returning({
     id: SessionTable.id,
     userId: SessionTable.userId,
   });
 
-  revalidateSessionCache(newJobInfo);
+  revalidateSessionCache(newSession);
 
-  return newJobInfo;
+  return newSession;
 }
 
 export async function updateSession(
   id: string,
-  jobInfo: Partial<typeof SessionTable.$inferInsert>,
+  session: Partial<typeof SessionTable.$inferInsert>,
 ) {
-  const [updatedJobInfo] = await db
+  const [updatedSession] = await db
     .update(SessionTable)
-    .set(jobInfo)
+    .set(session)
     .where(eq(SessionTable.id, id))
     .returning({
       id: SessionTable.id,
       userId: SessionTable.userId,
     });
 
-  revalidateSessionCache(updatedJobInfo);
+  revalidateSessionCache(updatedSession);
 
-  return updatedJobInfo;
+  return updatedSession;
 }

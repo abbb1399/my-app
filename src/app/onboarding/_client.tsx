@@ -11,7 +11,7 @@ export function OnboardingClient({ userId }: { userId: string }) {
   // TODO: 없앨 수 있는지 체크
   useEffect(() => {
     const intervalId = setInterval(async () => {
-      const user = getUser(userId);
+      const user = await getUser(userId);
       if (user == null) return;
 
       router.replace("/app");

@@ -29,9 +29,9 @@ export async function createSession(unsafeData: z.infer<typeof sessionSchema>) {
     };
   }
 
-  const jobInfo = await insertSession({ ...data, userId });
+  const session = await insertSession({ ...data, userId });
 
-  redirect(`/app/sessions/${jobInfo.id}`);
+  redirect(`/app/sessions/${session.id}`);
 }
 
 export async function updateSession(
@@ -55,21 +55,21 @@ export async function updateSession(
     };
   }
 
-  const existingJobInfo = await updateSessionInfo(id, userId);
+  const existingSession = await getSessionInfo(id, userId);
 
-  if (existingJobInfo == null) {
+  if (existingSession == null) {
     return {
       error: true,
       message: "수정 권한이 없습니다.",
     };
   }
 
-  const jobInfo = await updateSessionDb(id, data);
+  const session = await updateSessionDb(id, data);
 
-  redirect(`/app/sessions/${jobInfo.id}`);
+  redirect(`/app/sessions/${session.id}`);
 }
 
-async function updateSessionInfo(id: string, userId: string) {
+async function getSessionInfo(id: string, userId: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 

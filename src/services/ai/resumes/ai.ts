@@ -5,12 +5,12 @@ import { aiAnalyzeSchema } from "./schemas";
 
 export async function analyzeResumeForJob({
   resumeFile,
-  jobInfo,
+  session,
 }: {
   resumeFile: File;
-  jobInfo: Pick<
+  session: Pick<
     typeof SessionTable.$inferSelect,
-    "title" | "experienceLevel" | "description"
+    "title" | "description" | "topicTags"
   >;
 }) {
   const fileBuffer = await resumeFile.arrayBuffer();
@@ -35,12 +35,12 @@ export async function analyzeResumeForJob({
 
 You will receive a candidate's resume as a file in the user prompt. This resume is being used to apply for a job with the following information:
 
-Job Description:
+Session Description:
 \`\`\`
-${jobInfo.description}
+${session.description}
 \`\`\`
-Experience Level: ${jobInfo.experienceLevel}
-${jobInfo.title ? `\nJob Title: ${jobInfo.title}` : ""}
+${session.topicTags?.length ? `Topic Tags: ${session.topicTags.join(", ")}` : ""}
+${session.title ? `\nSession Title: ${session.title}` : ""}
 
 Your task is to evaluate the resume against the job requirements and provide structured feedback using the following categories:
 

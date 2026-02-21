@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     execute: async ({ writer }) => {
       const streamResult = generateAiQuestion({
         previousQuestions,
-        jobInfo: session,
+        session,
         difficulty,
         onFinish: async (question) => {
           const { id } = await insertQuestion({

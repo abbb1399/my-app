@@ -25,9 +25,9 @@ import z from "zod";
 type Status = "awaiting-answer" | "awaiting-difficulty" | "init";
 
 export function NewQuestionClientPage({
-  jobInfo,
+  session,
 }: {
-  jobInfo: Pick<typeof SessionTable.$inferSelect, "id" | "title">;
+  session: Pick<typeof SessionTable.$inferSelect, "id" | "title">;
 }) {
   const [status, setStatus] = useState<Status>("init");
   const [answer, setAnswer] = useState<string | null>(null);
@@ -76,8 +76,8 @@ export function NewQuestionClientPage({
     <div className="flex flex-col items-center gap-4 w-full mx-w-[2000px] mx-auto grow h-screen-header">
       <div className="container flex gap-4 mt-4 items-center justify-between">
         <div className="grow basis-0">
-          <BackLink href={`/app/sessions/${jobInfo.id}`}>
-            {jobInfo.title ?? "제목 없음"}
+          <BackLink href={`/app/sessions/${session.id}`}>
+            {session.title ?? "제목 없음"}
           </BackLink>
         </div>
 
@@ -103,7 +103,7 @@ export function NewQuestionClientPage({
             setQuestion("");
             setFeedback("");
             setAnswer(null);
-            generateQuestion(difficulty, { body: { sessionId: jobInfo.id } });
+            generateQuestion(difficulty, { body: { sessionId: session.id } });
           }}
         />
         <div className="grow hidden md:block" />

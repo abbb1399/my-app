@@ -36,13 +36,13 @@ async function SuspendedComponent({ sessionId }: { sessionId: string }) {
 
   if (!(await canCreateQuestion())) return redirect("/app/upgrade");
 
-  const jobInfo = await getJobInfo(sessionId, userId);
-  if (jobInfo == null) return notFound();
+  const session = await getSession(sessionId, userId);
+  if (session == null) return notFound();
 
-  return <NewQuestionClientPage jobInfo={jobInfo} />;
+  return <NewQuestionClientPage session={session} />;
 }
 
-async function getJobInfo(id: string, userId: string) {
+async function getSession(id: string, userId: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 

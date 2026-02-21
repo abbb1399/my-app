@@ -42,22 +42,22 @@ const options = [
   },
 ];
 
-export default async function JobInfoPage({
+export default async function SessionPage({
   params,
 }: {
   params: Promise<{ sessionId: string }>;
 }) {
   const { sessionId } = await params;
 
-  const jobInfo = getCurrentUser().then(
+  const session = getCurrentUser().then(
     async ({ userId, redirectToSignIn }) => {
       if (userId == null) return redirectToSignIn();
 
-      const jobInfo = await getJobInfo(sessionId, userId);
+      const session = await getSession(sessionId, userId);
 
-      if (jobInfo == null) notFound();
+      if (session == null) notFound();
 
-      return jobInfo;
+      return session;
     },
   );
 
@@ -70,14 +70,14 @@ export default async function JobInfoPage({
           <div className="space-y-2">
             <h1 className="text-3xl md:text-4xl">
               <SuspendedItem
-                item={jobInfo}
+                item={session}
                 fallback={<Skeleton className="w-48" />}
                 result={(j) => j.title ?? "제목 없음"}
               />
             </h1>
             <div className="flex gap-2 flex-wrap">
               <SuspendedItem
-                item={jobInfo}
+                item={session}
                 fallback={null}
                 result={(j) =>
                   j.moodRating != null ? (
@@ -86,20 +86,20 @@ export default async function JobInfoPage({
                 }
               />
               <SuspendedItem
-                item={jobInfo}
+                item={session}
                 fallback={null}
                 result={(j) =>
-                  j.title ? (
-                    <Badge variant="secondary">{j.title}</Badge>
-                  ) : null
+                  j.title ? <Badge variant="secondary">{j.title}</Badge> : null
                 }
               />
               <SuspendedItem
-                item={jobInfo}
+                item={session}
                 fallback={null}
                 result={(j) =>
                   (j.topicTags ?? []).map((tag) => (
-                    <Badge key={tag} variant="outline">{tag}</Badge>
+                    <Badge key={tag} variant="outline">
+                      {tag}
+                    </Badge>
                   ))
                 }
               />
@@ -107,7 +107,7 @@ export default async function JobInfoPage({
           </div>
           <p className="text-muted-foreground line-clamp-3">
             <SuspendedItem
-              item={jobInfo}
+              item={session}
               fallback={<Skeleton className="w-96" />}
               result={(j) => j.description}
             />
@@ -138,7 +138,7 @@ export default async function JobInfoPage({
   );
 }
 
-async function getJobInfo(id: string, userId: string) {
+async function getSession(id: string, userId: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 

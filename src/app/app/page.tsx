@@ -37,9 +37,9 @@ async function SessionInfos() {
 
   if (userId == null) return redirectToSignIn();
 
-  const jobInfos = await getSessions(userId);
+  const sessions = await getSessions(userId);
 
-  if (jobInfos.length === 0) {
+  if (sessions.length === 0) {
     return <NoSessionInfos />;
   }
 
@@ -56,29 +56,29 @@ async function SessionInfos() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 has-hover:*:not-hover:opacity-70">
-        {jobInfos.map((jobInfo) => (
+        {sessions.map((session) => (
           <Link
             className="hover:scale-[1.02] transition-[transform_opacity]"
-            href={`/app/sessions/${jobInfo.id}`}
-            key={jobInfo.id}
+            href={`/app/sessions/${session.id}`}
+            key={session.id}
           >
             <Card className="h-full">
               <div className="flex items-center justify-between h-full">
                 <div className="space-y-4 h-full">
                   <CardHeader>
-                    <CardTitle className="text-lg">{jobInfo.title ?? "제목 없음"}</CardTitle>
+                    <CardTitle className="text-lg">{session.title ?? "제목 없음"}</CardTitle>
                   </CardHeader>
                   <CardContent className="text-muted-foreground line-clamp-3">
-                    {jobInfo.description}
+                    {session.description}
                   </CardContent>
                   <CardFooter className="flex gap-2 flex-wrap">
-                    {jobInfo.title && (
-                      <Badge variant="outline">{jobInfo.title}</Badge>
+                    {session.title && (
+                      <Badge variant="outline">{session.title}</Badge>
                     )}
-                    {jobInfo.moodRating != null && (
-                      <Badge variant="outline">기분 {jobInfo.moodRating}/10</Badge>
+                    {session.moodRating != null && (
+                      <Badge variant="outline">기분 {session.moodRating}/10</Badge>
                     )}
-                    {(jobInfo.topicTags ?? []).map((tag) => (
+                    {(session.topicTags ?? []).map((tag) => (
                       <Badge key={tag} variant="secondary">{tag}</Badge>
                     ))}
                   </CardFooter>

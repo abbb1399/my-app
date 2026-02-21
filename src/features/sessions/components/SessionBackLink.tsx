@@ -27,11 +27,11 @@ export function SessionBackLink({
 }
 
 async function JobName({ sessionId }: { sessionId: string }) {
-  const jobInfo = await getJobInfo(sessionId);
-  return jobInfo?.title ?? "제목 없음";
+  const session = await getSession(sessionId);
+  return session?.title ?? "제목 없음";
 }
 
-async function getJobInfo(id: string) {
+async function getSession(id: string) {
   "use cache";
   cacheTag(getSessionIdTag(id));
 

@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       case "user.updated":
         const clerkData = event.data;
         const email = clerkData.email_addresses.find(
-          (e) => e.id === clerkData.primary_email_address_id
+          (e) => e.id === clerkData.primary_email_address_id,
         )?.email_address;
 
         if (email == null) {
